@@ -1,0 +1,115 @@
+*{
+    font-family: 'Montserrat', sans-serif;
+}
+
+div#icons-main{
+    background-color: #000;
+    color: #fff;
+}
+
+div#icons-main #body{
+    min-width: 300px;
+    text-align: center;
+    vertical-align: middle;
+    color: #fff;
+    font-weight: 300;
+    background-color: darkgray;
+    align-items: center;
+}
+
+.home-icons-main{
+    cursor: pointer;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    color: #fff;
+    font-weight: 300;
+    background: #6441A5;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #2a0845, #6441A5,#2a0845);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #2a0845, #6441A5, #2a0845); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+main{
+    margin-bottom: 80px;
+}
+
+.footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    background: #efefef;
+}
+
+html, body {
+    background-color: #fff;
+    color: #636b6f;
+    font-weight: 200;
+    height: 100vh;
+    margin: 0;
+}
+
+.full-height {
+    height: 100vh;
+}
+
+.flex-center {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.position-ref {
+    position: relative;
+}
+
+.top-right {
+    position: absolute;
+    right: 10px;
+    top: 18px;
+}
+
+.content {
+    text-align: center;
+}
+
+.title {
+    font-size: 84px;
+}
+
+.links > a {
+    color: #636b6f;
+    padding: 0 25px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.m-b-md {
+    margin-bottom: 30px;
+}
+
+.next{
+    width: 100%;
+    max-width: 100px;
+    height: auto;
+}
+.positivo {
+    border-left: 2px solid #efefef;
+    width: 100%;
+    max-width: 140px;
+    height: auto;
+}
+
+
+
+
+@media (max-width: 768px) {
+    .home-icons-main{
+        min-height: 120px;
+    }
+}
