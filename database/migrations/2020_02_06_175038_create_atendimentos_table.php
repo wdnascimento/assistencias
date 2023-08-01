@@ -30,6 +30,7 @@ class CreateAtendimentosTable extends Migration
                     ->references('id')->on('aulas')
                     ->onDelete('cascade');
             $table  ->unique(['ordem','user_id','aula_id','status'] );
+            $table->softDeletes();
             $table->timestamps();
         });
     }

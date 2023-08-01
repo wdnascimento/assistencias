@@ -40,7 +40,7 @@ class AlunoController extends Controller
         ];
 
         $params = $this->params;
-        $data = $this->aluno->all();
+        $data = $this->aluno->paginate(20);
 
         return view('admin.aluno.index',compact('params','data'));
     }

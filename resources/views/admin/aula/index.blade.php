@@ -87,8 +87,8 @@
                     @endif
 
                 </div>
-                <div class="box-footer clearfix text-center p-3">
-                    {{ $data->links() }}
+                <div class="box-footer clearfix d-flex justify-content p-3">
+                    {!! $data->links() !!}
                 </div>
                 <!-- /.card-body -->
               </div>

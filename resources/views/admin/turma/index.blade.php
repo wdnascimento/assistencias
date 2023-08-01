@@ -30,6 +30,7 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Unidade</th>
                                 <th>Titulo</th>
                                 <th>Ativo?</th>
                                 <th>Operação</th>
@@ -39,6 +40,7 @@
                                 @foreach ($data as $item)
                                 <tr>
                                     <td>{{ $item['id']}}</td>
+                                    <td>{{ $item['desc_unidade']}}</td>
                                     <td>{{ $item['titulo']}}</td>
                                     <td>{{ $item['desc_status']}}</td>
                                     <td>

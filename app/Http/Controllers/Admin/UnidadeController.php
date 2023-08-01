@@ -3,63 +3,58 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Turma\TurmaRequest;
-use App\Models\Turma;
+use App\Http\Requests\Admin\Unidade\UnidadeRequest;
 use App\Models\Unidade;
-use Illuminate\Http\Request;
 
-class TurmaController extends Controller
+class UnidadeController extends Controller
 {
-    public function __construct(Turma $turmas , Unidade $unidades)
+    public function __construct(Unidade $unidades)
     {
-        $this->turma = $turmas;
         $this->unidade = $unidades;
 
         // Default values
-        $this->params['titulo']='Turma';
-        $this->params['main_route']='admin.turma';
+        $this->params['titulo']='Unidade';
+        $this->params['main_route']='admin.unidade';
 
     }
 
     public function index()
     {
         // PARAMS DEFAULT
-        $this->params['subtitulo']='Turmas Cadastradas';
+        $this->params['subtitulo']='Unidades Cadastradas';
         $this->params['arvore'][0] = [
-                    'url' => 'admin/turma',
-                    'titulo' => 'Turma'
+                    'url' => 'admin/unidade',
+                    'titulo' => 'Unidade'
         ];
 
         $params = $this->params;
-        $data = $this->turma->all();
+        $data = $this->unidade->all();
 
-        return view('admin.turma.index',compact('params','data'));
+        return view('admin.unidade.index',compact('params','data'));
     }
 
     public function create()
     {
          // PARAMS DEFAULT
-         $this->params['subtitulo']='Cadastrar Turma';
+         $this->params['subtitulo']='Cadastrar Unidade';
          $this->params['arvore']=[
             [
-                'url' => 'admin/turma',
-                'titulo' => 'Turma'
+                'url' => 'admin/unidade',
+                'titulo' => 'Unidade'
             ],
             [
                 'url' => '',
                 'titulo' => 'Cadastrar'
             ]];
         $params = $this->params;
-        $preload['unidades'] = $this->unidade->orderBy('titulo')->get()->pluck('titulo','id');
-        return view('admin.turma.create',compact('params','preload'));
+        return view('admin.unidade.create',compact('params'));
     }
 
-    public function store(TurmaRequest $request)
+    public function store(UnidadeRequest $request)
     {
         $dataForm  = $request->all();
-        $dataForm['status'] = isset($dataForm['status']) ? 1 : 0;
 
-        $insert = $this->turma->create($dataForm);
+        $insert = $this->unidade->create($dataForm);
         if($insert){
             return redirect()->route($this->params['main_route'].'.index');
         }else{
@@ -70,25 +65,24 @@ class TurmaController extends Controller
 
     public function edit($id)
     {
-        $this->params['subtitulo']='Editar Turma';
+        $this->params['subtitulo']='Editar Unidade';
         $this->params['arvore']=[
            [
-               'url' => 'admin/turma',
-               'titulo' => 'Turma'
+               'url' => 'admin/unidade',
+               'titulo' => 'Unidade'
            ],
            [
                'url' => '',
                'titulo' => 'Cadastrar'
            ]];
        $params = $this->params;
-       $data = $this->turma->find($id);
-       $preload['unidades'] = $this->unidade->orderBy('titulo')->get()->pluck('titulo','id');
-       return view('admin.turma.create',compact('params', 'data','preload'));
+       $data = $this->unidade->find($id);
+       return view('admin.unidade.create',compact('params', 'data'));
     }
 
-    public function update(TurmaRequest $request, $id)
+    public function update(UnidadeRequest $request, $id)
     {
-        $data = $this->turma->find($id);
+        $data = $this->unidade->find($id);
         $dataForm = $request->all();
         $dataForm['status'] = isset($dataForm['status']) ? 1 : 0;
 

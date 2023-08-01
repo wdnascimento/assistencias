@@ -9,10 +9,16 @@ class Turma extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['titulo','status','desc_status'];
+    protected $fillable = ['unidade_id','titulo','status','desc_status','desc_unidade'];
 
     public function getDescStatusAttribute()
     {
         return $this->status ? 'SIM' : 'NÃO' ;
+    }
+
+    public function getDescUnidadeAttribute()
+    {
+        $unidade = new Unidade();
+        return $unidade->select('titulo')->where('id',$this->unidade_id)->first()->titulo;
     }
 }

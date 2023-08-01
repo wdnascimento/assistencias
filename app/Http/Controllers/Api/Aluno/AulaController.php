@@ -9,6 +9,13 @@ class AulaController extends Controller
 {
     public function ativas()
     {
-        return Aula::ativas();
+        $aula = new Aula();
+        return $aula->ativas();
+    }
+
+    public function aulasala($id)
+    {
+        $aula = new Aula();
+        return $aula->aulasala($id);
     }
 }

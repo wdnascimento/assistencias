@@ -1,8 +1,8 @@
 <?php
 
+use App\Events\AulaSalaEvent;
 use App\Events\FilasAtivasEvent;
 use Illuminate\Support\Facades\Broadcast;
-use Illuminate\Support\Facades\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +21,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 
 Broadcast::channel('filaaula.{id}', FilasAtivasEvent::class);
+Broadcast::channel('aulasala.{id}', AulaSalaEvent::class);
 
 
 

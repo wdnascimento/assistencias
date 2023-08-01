@@ -47,23 +47,8 @@
                     @endif
                     <div class="row">
                         <div class="form-group col-6">
-                            {{Form::label('unidade_id', 'Unidade')}}
-                            {{Form::select('unidade_id',
-                                    $preload['unidades'],
-                                    ((isset($data->unidade_id)) ? $data->unidade_id : null),
-                                    ['id'=>'unidade_id','class' =>'form-control'])}}
-                        </div>
-                        <div class="form-group col-6">
                             {{Form::label('titulo', 'Título da Turma')}}
                             {{Form::text('titulo',null,['class' => 'form-control', 'placeholder' => 'Título'])}}
-                        </div>
-                        <div class="form-group col-6">
-                            {{Form::label('status', 'Status')}}
-                            @if( isset($data))
-                                {{Form::checkbox('status',1,((isset($data->status)) ? $data->status : null),[ 'class' => 'p-5','style' => 'display:list-item'])}}
-                            @else
-                                {{Form::checkbox('status',1,['checked', 'class' => 'p-5','style' => 'display:list-item'])}}
-                            @endif
                         </div>
                         <div class="form-group col-12">
                             {{Form::submit('Salvar',['class'=>'btn btn-success btn-sm'])}}

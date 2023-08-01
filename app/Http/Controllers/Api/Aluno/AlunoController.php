@@ -24,11 +24,10 @@ class AlunoController extends Controller
         $dataForm['user_id'] = Auth::User()->id;
 
         if($this->atendimento->solicitarSenha($dataForm)){
-            Event::dispatch(new AulasAtivasEvent());
             return response()->json(true, 201);
         }else{
             return response()->json([
-                'message'   => 'Erro ao Desistir Senha',
+                'message'   => 'Erro ao Retirar Senha',
                 'errors'    => 'Erro ao Retirar Senha'
             ], 422);
         }
@@ -40,7 +39,6 @@ class AlunoController extends Controller
         $dataForm['user_id'] = Auth::User()->id;
 
         if($this->atendimento->desistirSenha($dataForm)){
-            Event::dispatch(new AulasAtivasEvent());
             return response()->json(true, 201);
         }else{
             return response()->json([

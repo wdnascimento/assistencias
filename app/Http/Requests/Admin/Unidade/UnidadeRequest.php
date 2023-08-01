@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin\Sala;
+namespace App\Http\Requests\Admin\Unidade;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 
-class SalaRequest extends FormRequest
+class UnidadeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,18 +25,18 @@ class SalaRequest extends FormRequest
     public function rules()
     {
         return [
-            'turma_id' => 'required',
-            'titulo' => 'required|min:3|unique:salas,titulo,null,null,turma_id,'.$this->turma_id ,
+            'unidade_id' => 'required' ,
+            'titulo' => 'required|min:3|unique:salas,titulo,'.$this->id,
         ];
     }
 
     public function messages()
     {
         return [
-            'turma_id.required' =>'O campo turma é de preenchimento obrigatório!',
+            'unidade_id.required' =>'O campo Unidade é de preenchimento obrigatório!',
             'titulo.required' =>'O campo título é de preenchimento obrigatório!',
             'titulo.min' =>'O campo título precisa ter no mínimo 3 caracteres!',
-            'titulo.unique' =>'Sala já cadastrada',
+            'titulo.unique' =>'Unidade já cadastrada',
         ];
     }
 }

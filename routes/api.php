@@ -5,9 +5,7 @@ use App\Http\Controllers\Api\Aluno\AtendimentoController;
 use App\Http\Controllers\Api\Aluno\AulaController;
 use App\Http\Controllers\Api\Aluno\IndexController;
 use App\Http\Controllers\Api\Professor\AtendimentoController as ProfessorAtendimentoController;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Api\Professor\AulaController as ProfessorAulaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/aulasativas', [AulaController::class,'ativas'])->name('api.aulas.ativas');
+Route::get('/aulasala/{aula_id}', [AulaController::class,'aulasala'])->name('api.aula.sala');
 Route::get('/filaaula/{aula_id}', [AtendimentoController::class,'filaaula'])->name('api.aluno.filaaula');
 
 
@@ -32,17 +31,15 @@ Route::group(['middleware' => ['auth', 'throttle:500|2200,1']], function () {
 });
 
 Route::group(['middleware' => ['auth:professor', 'throttle:500|2200,1']], function () {
+    Route::post('/cadastraraula', [ProfessorAulaController::class,'cadastraraula'])->name('api.professor.cadastraraula');
     Route::post('/chamar', [ProfessorAtendimentoController::class,'chamar'])->name('api.professor.chamar');
     Route::post('/pausar', [ProfessorAtendimentoController::class,'pausar'])->name('api.professor.pausar');
     Route::post('/finalizar', [ProfessorAtendimentoController::class,'finalizar'])->name('api.professor.finalizar');
+    Route::get('/getAluno', [ProfessorAtendimentoController::class,'getAluno'])->name('api.professor.aluno');
 });
 
  Route::group(['middleware' => ['auth', 'throttle:500|2200,1']], function () {
     Route::post('/broadcasting/auth',function(){
-    //     //         $data['token'] = "O0efhw.66yhMg:MX-caD_8538xWhoSSCRb_wSjJX_1MfgQWpJD5sVEwS8";
-    //     // //     $tmp['code'] = 200;
-    //     // //     $tmp['auth'] = $data;
-    //     // //     return response([ 'data' => $tmp ],200);
             return true;
     });
 

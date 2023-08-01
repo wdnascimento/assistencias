@@ -56,6 +56,9 @@
 
                             </tbody>
                         </table>
+                        <div class="box-footer clearfix p-3 d-flex justify-content-end align-content-center">
+                            {{ $data->links() }}
+                        </div>
                     @else
                         <div class="alert alert-success m-2" role="alert">
                             Nenhuma informação cadastrada.

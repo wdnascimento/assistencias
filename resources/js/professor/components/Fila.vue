@@ -70,7 +70,7 @@ export default {
         },
 
         carregarFila(){
-            axios.get('/assistencias/api/filaaula/'+this.aula_id,{ assinc : true})
+            axios.get(process.env.MIX_APP_URL+'/api/filaaula/'+this.aula_id,{ assinc : true})
                 .then(response => {
                     this.fila = response.data;
                 })
@@ -87,7 +87,7 @@ export default {
         },
 
         pegarSenha(id){
-            axios.post('/assistencias/api/pegarsenha',
+            axios.post(process.env.MIX_APP_URL+'/api/pegarsenha',
                     {
                         aula_id: id,
                     }
@@ -108,7 +108,7 @@ export default {
         },
 
         desistirSenha(id){
-            axios.post('/assistencias/api/desistirsenha',
+            axios.post(process.env.MIX_APP_URL+'/api/desistirsenha',
                     {
                         aula_id: id,
                     }

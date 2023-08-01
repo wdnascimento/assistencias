@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\IndexController;
 use App\Http\Controllers\Admin\ProfessorController;
 use App\Http\Controllers\Admin\SalaController;
 use App\Http\Controllers\Admin\TurmaController;
+use App\Http\Controllers\Admin\UnidadeController;
 use App\Http\Controllers\Aluno\HomeController as AlunoHomeController;
 use App\Http\Controllers\Auth\Admin\LoginController;
 use App\Http\Controllers\Auth\Professor\LoginController as ProfessorLoginController;
@@ -59,6 +60,9 @@ Route::group(['prefix' => 'professor','middleware' => 'auth:professor','namespac
 
     // Atendimento
     Route::get('atendimento', [AtendimentoController::class,'index'])->name('professor.atendimento.index');
+    Route::get('atendimento/unidade/{unidade_id}', [AtendimentoController::class,'unidade'])->name('professor.atendimento.unidade');
+    Route::get('atendimento/unidade/{unidade_id}/turma/{turma_id}', [AtendimentoController::class,'turma'])->name('professor.atendimento.turma');
+    Route::get('atendimento/unidade/{unidade_id}/turma/{turma_id}/sala/{sala_id}', [AtendimentoController::class,'sala'])->name('professor.atendimento.sala');
     Route::post('atendimento/chamar/', [AtendimentoController::class,'chamar'])->name('professor.atendimento.chamar');
     Route::post('atendimento/pausar/', [AtendimentoController::class,'pausar'])->name('professor.atendimento.pausar');
     Route::post('atendimento/finalizar/', [AtendimentoController::class,'finalizar'])->name('professor.atendimento.finalizar');
@@ -173,6 +177,16 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::post('turma/store', [TurmaController::class,'store'])->name('admin.turma.store');
     Route::post('turma/ativar/{id}', [TurmaController::class,'ativar'])->name('admin.turma.ativar');
     Route::post('turma/desativar/{id}', [TurmaController::class,'desativar'])->name('admin.turma.desativar');
+
+    //Unidade
+    Route::get('unidade', [UnidadeController::class,'index'])->name('admin.unidade.index');
+    Route::get('unidade/edit/{id}', [UnidadeController::class,'edit'])->name('admin.unidade.edit');
+    Route::put('unidade/update/{id}', [UnidadeController::class,'update'])->name('admin.unidade.update');
+    Route::get('unidade/show/{id}', [UnidadeController::class,'show'])->name('admin.unidade.show');
+    Route::get('unidade/create', [UnidadeController::class,'create'])->name('admin.unidade.create');
+    Route::post('unidade/store', [UnidadeController::class,'store'])->name('admin.unidade.store');
+    Route::post('unidade/ativar/{id}', [UnidadeController::class,'ativar'])->name('admin.unidade.ativar');
+    Route::post('unidade/desativar/{id}', [UnidadeController::class,'desativar'])->name('admin.unidade.desativar');
 });
 
 

@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Events\SalasAtivasEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Sala;
 use App\Http\Requests\Admin\Sala\SalaRequest;
 use App\Models\Turma;
-use Exception;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\DB;
 
 class SalaController extends Controller
 {
@@ -23,6 +21,7 @@ class SalaController extends Controller
 
     }
 
+
     public function index()
     {
         // PARAMS DEFAULT
@@ -33,7 +32,11 @@ class SalaController extends Controller
         ];
 
         $params = $this->params;
-        $data = $this->sala->all();
+        $data = $this->sala->select('salas.*','turmas.titulo as desc_turma', 'unidades.titulo as desc_unidade')
+                           ->join('turmas','turmas.id','salas.turma_id')
+                           ->join('unidades','unidades.id','turmas.unidade_id')
+                           ->orderBy('unidades.id')
+                           ->paginate(20);
 
         return view('admin.sala.index',compact('params','data'));
     }
@@ -52,7 +55,7 @@ class SalaController extends Controller
                 'titulo' => 'Cadastrar'
             ]];
         $params = $this->params;
-        $preload['turma_id'] = $this->turma->orderBy('titulo')->get()->pluck('titulo','id');
+        $preload['turma_id'] = $this->getTurmas();
         return view('admin.sala.create',compact('params','preload'));
     }
 
@@ -60,16 +63,8 @@ class SalaController extends Controller
     {
         $dataForm  = $request->all();
 
-        $dataForm['turma_id'] =1;
         $insert = $this->sala->create($dataForm);
         if($insert){
-            try{
-                Event::dispatch(new SalasAtivasEvent(1));
-
-            }catch(Exception $e){
-                return redirect()->route($this->params['main_route'].'.create')->withErrors(['Erro ao Registrar Evento.']);
-            }
-
             return redirect()->route($this->params['main_route'].'.index');
         }else{
             return redirect()->route($this->params['main_route'].'.create')->withErrors(['Falha ao fazer Inserir.']);
@@ -92,7 +87,7 @@ class SalaController extends Controller
        $params = $this->params;
 
        $data = $this->sala->find($id);
-       $preload['turma_id'] = $this->turma->orderBy('titulo')->get()->pluck('titulo','id');
+       $preload['turma_id'] = $this->getTurmas();
        return view('admin.sala.show',compact('params','data','preload'));
     }
 
@@ -111,22 +106,17 @@ class SalaController extends Controller
         $params = $this->params;
         $data = $this->sala->find($id);
 
-        $preload['turma_id'] = $this->turma->orderBy('titulo')->get()->pluck('titulo','id');
-       return view('admin.sala.create',compact('params', 'data','preload'));
+        $preload['turma_id'] = $this->getTurmas();
+
+        return view('admin.sala.create',compact('params', 'data','preload'));
     }
 
     public function update(SalaRequest $request, $id)
     {
         $data= $request->all();
-        $data['dataForm'] =1;
 
         if($this->sala->find($id)->update($data)){
-            try{
-                Event::dispatch(new SalasAtivasEvent(1));
 
-            }catch(Exception $e){
-                return redirect()->route($this->params['main_route'].'.create')->withErrors(['Erro ao Registrar Evento.']);
-            }
             return redirect()->route($this->params['main_route'].'.index');
         }else{
             return redirect()->route($this->params['main_route'].'.create')->withErrors(['Falha ao editar.']);
@@ -138,15 +128,19 @@ class SalaController extends Controller
         $data = $this->sala->find($id);
 
         if($data->delete()){
-            try{
-                Event::dispatch(new SalasAtivasEvent(1));
-
-            }catch(Exception $e){
-                return redirect()->route($this->params['main_route'].'.create')->withErrors(['Erro ao Registrar Evento.']);
-            }
             return redirect()->route($this->params['main_route'].'.index');
         }else{
             return redirect()->route($this->params['main_route'].'.create')->withErrors(['Falha ao deletar.']);
         }
+    }
+
+    public function getTurmas(){
+        return $this->turma
+                                ->select(DB::raw("CONCAT(unidades.titulo,' - ', turmas.titulo) as titulo"),'turmas.id as id')
+                                ->join('unidades','unidades.id','turmas.unidade_id')
+                                ->orderBy('unidades.id')
+                                ->orderBy('turmas.titulo')
+                                ->get()
+                                ->pluck('titulo','id');
     }
 }

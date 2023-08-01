@@ -49,11 +49,11 @@
                         {{Form::label('turma_id', 'Turma')}}
                         {{Form::select('turma_id',
                                 $preload['turma_id'],
-                                ((isset($data->id)) ? $data->id : null),
+                                ((isset($data->turma_id)) ? $data->turma_id : null),
                                 ['id'=>'turma_id','class' =>'form-control'])}}
                     </div>
                     <div class="form-group">
-                        {{Form::label('titulo', 'Título da Aula')}}
+                        {{Form::label('titulo', 'Título da Sala / Mesa')}}
                         {{Form::text('titulo',null,['class' => 'form-control', 'placeholder' => 'Título'])}}
                     </div>
                     <div class="form-group">

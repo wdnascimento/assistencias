@@ -2,18 +2,21 @@
 
 namespace App\Models;
 
+use App\Events\AulaSalaEvent;
 use App\Events\AulasAtivasEvent;
 use App\Events\FilasAtivasEvent;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Aula;
 use Exception;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
 class Atendimento extends Model
 {
+    use SoftDeletes;
     protected $fillable = ['id', 'aula_id', 'user_id','ordem','status','hora_solicitacao','hora_atendimento', 'hora_termino'];
 
     public function aula(){
@@ -28,6 +31,7 @@ class Atendimento extends Model
     public function chamarProximo($dataForm){
         try {
             DB::beginTransaction();
+                $response = [];
                 // SELECIONA O ALUNO QUE ESTÁ EM ATENDIMENTO
                 $current = $this->select('id')->where('aula_id', $dataForm['aula_id'])->where('status',1)->first();
                 if($current){
@@ -37,63 +41,39 @@ class Atendimento extends Model
 
                     if(! $this->find($current['id'])->update($data)){
                         DB::rollback();
-                        return false;
+                        $response['result'] = false;
+                        return $response;
                     }
                 }
 
                 // SELECIONA O ALUNO QUE É O PROXIMO DA LISTA DE ATENDIMENTO
-                $new = $this->select('id','user_id','ordem')->where('aula_id', $dataForm['aula_id'])->where('status',0)->orderBy('ordem')->first();
+                $new = $this->select('id','user_id','aula_id','ordem')->where('aula_id', $dataForm['aula_id'])->where('status',0)->orderBy('ordem')->first();
 
                 if($new){
-                    // VERIFICA SE O ALUNO A SER CHAMADO ESTÁ EM ATENDIMENTO
-                    $busy = $this->select('id','user_id','ordem')->where('status',1)->where('user_id',$new['user_id'])->first();
 
-                    if($busy){
-                        // PROCURA A EXISTENCIA DE PRÓXIMO NA LISTA
-
-                        $next = $this->select('id','user_id','ordem')->where('status',0)->where('ordem','>',$new['ordem'])->where('aula_id', $dataForm['aula_id'])->orderBy('ordem')->first();
-                        if($next){
-                            // SE EXISTIR TROCA DE POSIÇÃO COM O ALUNO OCUPADO
-                            unset($data);
-                            $data['status']=1;
-                            $data['ordem']=$new['ordem'];
-                            $data['hora_atendimento'] =  date("Y-m-d H:i:s");
-
-                            // EFETIVANDO A TROCA DE POSIÇÃO PARTE 1
-
-                            if(!$this->find($next['id'])->update($data)){
-                                DB::rollback();
-                                return false;
-                            }
-
-                            // EFETIVANDO A TROCA DE POSIÇÃO PARTE 1
-
-                            unset($data);
-                            $data['ordem']=$next['ordem'];
-
-                            if(!$this->find($new['id'])->update($data)){
-                                DB::rollback();
-                                return false;
-                            }
-
-                        }
-
-                    }else{
-                        unset($data);
-                        $data['status']=1;
-                        $data['hora_atendimento'] =  date("Y-m-d H:i:s");
-                        if(!$this->find($new['id'])->update($data)){
-                            DB::rollback();
-                            return false;
-                        }
+                    unset($data);
+                    $data['status']=1;
+                    $data['hora_atendimento'] =  date("Y-m-d H:i:s");
+                    if(!$this->find($new['id'])->update($data)){
+                        DB::rollback();
+                        $response['result'] = false;
+                        return $response;
                     }
-
-
+                    $user = new User();
+                    $response['aluno'] =  $user->find($new['user_id']) ;
+                    $aula = new Aula();
+                    $response['aula'] =  $aula->with('professor')->with('disciplina')->with('sala')->find($new['aula_id']) ;
+                }else{
+                    $response['aluno_id'] = null;
                 }
-            DB::commit();
-            Event::dispatch(new AulasAtivasEvent());
-            Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
-            return true;
+                DB::commit();
+                $aula = new Aula();
+                $aula = $aula->select('sala_id')->where('id',$dataForm['aula_id'])->first();
+                Event::dispatch(new AulasAtivasEvent());
+                Event::dispatch(new AulaSalaEvent($aula['sala_id']));
+                Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
+                $response['result'] = true;
+                return $response;
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -115,8 +95,14 @@ class Atendimento extends Model
                         return false;
                     }
                 }
+
             DB::commit();
+
+            $aula = new Aula();
+            $aula = $aula->select('sala_id')->where('id',$dataForm['aula_id'])->first();
+
             Event::dispatch(new AulasAtivasEvent());
+            Event::dispatch(new AulaSalaEvent($aula['sala_id']));
             Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
             return true;
         } catch (Exception $e) {
@@ -129,28 +115,42 @@ class Atendimento extends Model
         try {
 
             DB::beginTransaction();
-                // SELECIONA O ALUNO QUE ESTÁ EM ATENDIMENTO
-                $current = $this->select('id')->where('aula_id', $dataForm['aula_id'])->where('status',1)->first();
-                if($current){
-                    $data['status']='2';
-                    $data['hora_termino'] =  date("Y-m-d H:i:s");
-                    // ALTERA O STATUS PARA ATENDIDO
-                    if(! $this->find($current['id'])->update($data)){
-                        DB::rollback();
-                        return false;
+                $aula = new Aula();
+                // testa se a aula está ativa e pega a sala_id
+                if($aula = $aula->select('sala_id','status')->where('id',$dataForm['aula_id'])->first()){
+                    if($aula['status'] == 1){
+                        // SELECIONA O ALUNO QUE ESTÁ EM ATENDIMENTO
+                        $current = $this->select('id')->where('aula_id', $dataForm['aula_id'])->where('status',1)->first();
+                        if($current){
+                            $data['status']='2';
+                            $data['hora_termino'] =  date("Y-m-d H:i:s");
+                            // ALTERA O STATUS PARA ATENDIDO
+                            if(! $this->find($current['id'])->update($data)){
+                                DB::rollback();
+                                return false;
+                            }
+                        }
+                        unset($data);
+                        $data['status']= '0';
+                        $data['fim'] =  date("Y-m-d H:i:s");
+                        if(! $aula->find($dataForm['aula_id'])->update($data)){
+                            DB::rollback();
+                            return false;
+                        }
+                        DB::commit();
+                        Event::dispatch(new AulasAtivasEvent());
+                        Event::dispatch(new AulaSalaEvent($aula['sala_id']));
+                        Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
+                        return true;
                     }
                 }
-                unset($data);
-                $data['status']= '0';
-                $aula = new Aula();
-                if(! $aula->where('id', $dataForm['aula_id'])->update($data)){
-                    DB::rollback();
-                    return false;
-                }
-            DB::commit();
-            Event::dispatch(new AulasAtivasEvent());
-            Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
-            return true;
+                DB::rollback();
+
+                Event::dispatch(new AulasAtivasEvent());
+                Event::dispatch(new AulaSalaEvent($aula['sala_id']));
+                Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
+                return false;
+
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -158,17 +158,33 @@ class Atendimento extends Model
     }
 
     public function solicitarSenha($data){
-         // data ['aula_id' , 'user_id']
+        // data ['aula_id' , 'user_id']
         try {
             DB::beginTransaction();
-            $data['ordem'] = $this->where('aula_id',$data['aula_id'])->max('ordem') + 1;
+            $aula = new Aula();
+            // testa se a aula está ativa e pega a sala_id
+            if($aula = $aula->select('sala_id','status')->where('id',$data['aula_id'])->first()){
+                if($aula['status'] == '1'){
+                    $data['ordem'] = $this->where('aula_id',$data['aula_id'])->withTrashed()->max('ordem') + 1;
+                    if($this->create($data)){
+                        DB::commit();
+                        Event::dispatch(new AulasAtivasEvent());
+                        Event::dispatch(new AulaSalaEvent($aula['sala_id']));
+                        Event::dispatch(new FilasAtivasEvent($data['aula_id']));
+                        return true;
+                    }
+                }
+                DB::rollback();
 
-            if($this->create($data)){
-                DB::commit();
                 Event::dispatch(new AulasAtivasEvent());
+                Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($data['aula_id']));
-                return true;
+                return false;
             }
+            Event::dispatch(new AulasAtivasEvent());
+            Event::dispatch(new FilasAtivasEvent($data['aula_id']));
+            DB::rollback();
+            return false;
 
         } catch (Exception $e) {
             DB::rollback();
@@ -188,16 +204,28 @@ class Atendimento extends Model
                         ->first();
             if($tmp){
                 $this->find($tmp->id)->delete();
+
                 DB::commit();
+                $aula = new Aula();
+                $aula =$aula->select('sala_id')->where('id',$data['aula_id'])->first();
+                // testa se a aula está ativa e pega a sala_id
                 Event::dispatch(new AulasAtivasEvent());
+                Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($data['aula_id']));
                 return true;
             }
+            $aula = new Aula();
+            $aula =$aula->select('sala_id')->where('id',$data['aula_id'])->first();
+            // testa se a aula está ativa e pega a sala_id
+            Event::dispatch(new AulasAtivasEvent());
+            Event::dispatch(new AulaSalaEvent($aula['sala_id']));
+            Event::dispatch(new FilasAtivasEvent($data['aula_id']));
+            return false;
+
        } catch (Exception $e) {
            DB::rollback();
            throw $e;
        }
-       return false;
    }
 
     // Seta - quando ouver - os alunos para atendido se por ventura
@@ -218,9 +246,8 @@ class Atendimento extends Model
 
     public function filaAula($aula_id){
 
-        return $this    ->select(   'atendimentos.id','atendimentos.ordem','atendimentos.user_id'
-                                    ,'atendimentos.status', 'users.name as nome'
-                                    )
+        return $this ->select(   'atendimentos.id','atendimentos.ordem','atendimentos.user_id'
+                                    ,'atendimentos.status', 'users.name as nome')
                         ->join('users','users.id', 'atendimentos.user_id')
                         ->where('aula_id',$aula_id)
                         ->where('status',0)

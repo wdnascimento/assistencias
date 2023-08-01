@@ -335,8 +335,16 @@ return [
             'text'        => 'Início',
             'url'         => 'professor/home',
             'icon'        => 'fas fa-home',
-            'can'         => ['professores','atendimento','administrador'],
-           /* 'label'       => 4,
+            'can'         => ['professores'],
+            /* 'label'       => 4,
+            'label_color' => 'success', */
+        ],
+        [
+            'text'        => 'Início',
+            'url'         => 'admin/home',
+            'icon'        => 'fas fa-home',
+            'can'         => ['atendimento','administrador'],
+            /* 'label'       => 4,
             'label_color' => 'success', */
         ],
         [
@@ -344,14 +352,8 @@ return [
             'url'         => 'admin/atendimento',
             'icon'        => 'fas fa-sync',
             'can'         => ['administrador','atendimento']
-           /* 'label'       => 4,
+            /* 'label'       => 4,
             'label_color' => 'success', */
-        ],
-        [
-            'text'        => 'Turmas',
-            'url'         => 'admin/turma',
-            'icon'        => 'fas fa-users',
-            'can'         => ['administrador'],
         ],
         [
             'text'        => 'Aulas',
@@ -361,19 +363,32 @@ return [
            /* 'label'       => 4,
             'label_color' => 'success', */
         ],
+        ['header' => 'Parametrização' , 'can'         => ['administrador']],
+        [
+            'text'        => 'Unidades',
+            'url'         => 'admin/unidade',
+            'icon'        => 'fas fa-building',
+            'can'         => ['administrador'],
+        ],
+        [
+            'text'        => 'Turmas / Salas',
+            'url'         => 'admin/turma',
+            'icon'        => 'fas fa-users',
+            'can'         => ['administrador'],
+        ],
+        [
+            'text'        => 'Mesas / Cabines',
+            'url'         => 'admin/sala',
+            'icon'        => 'fas fa-concierge-bell',
+            'can'         => ['administrador'],
+        ],
         [
             'text'        => 'Disciplinas',
             'url'         => 'admin/disciplina',
-            'icon'        => 'far fa-fw fa-file',
+            'icon'        => 'fas fa-book',
             'can'         => ['administrador'],
            /* 'label'       => 4,
             'label_color' => 'success', */
-        ],
-        [
-            'text'        => 'Salas / Mesas',
-            'url'         => 'admin/sala',
-            'icon'        => 'far fa-fw fa-file',
-            'can'         => ['administrador'],
         ],
         ['header' => 'Alunos','can' => ['administrador']] ,
         [
@@ -400,7 +415,7 @@ return [
         [
             'text'        => 'Administradores',
             'url'         => 'admin/administrador',
-            'icon'        => 'far fa-fw fa-file',
+            'icon'        => 'fas fa-user-shield',
             'can'         => ['administrador'],
            /* 'label'       => 4,
             'label_color' => 'success', */
@@ -408,7 +423,7 @@ return [
         [
             'text'        => 'Professores',
             'url'         => 'admin/professor',
-            'icon'        => 'far fa-fw fa-file',
+            'icon'        => 'fas fa-chalkboard-teacher',
             'can'         => ['administrador'],
            /* 'label'       => 4,
             'label_color' => 'success', */

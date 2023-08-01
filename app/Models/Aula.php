@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\AulaSalaEvent;
 use App\Events\AulasAtivasEvent;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Sala;
@@ -25,13 +26,29 @@ class Aula extends Model
     }
 
     public function ativas(){
-        return Aula::select( 'aulas.id',DB::raw("(SUBSTRING_INDEX(professors.name, ' ', 1)) as professor")
-                                    , 'salas.titulo as sala'
-                                    , 'disciplinas.titulo as disciplina')
+        return Aula::select( 'aulas.id','salas.id as sala_id','professors.id as professor_id'
+                                    ,'salas.titulo as sala'
+                                    ,DB::raw("(SUBSTRING_INDEX(professors.name, ' ', 1)) as professor")
+                                    ,'disciplinas.titulo as disciplina' )
                         ->join('salas','salas.id','aulas.sala_id')
                         ->join('professors','professors.id','aulas.professor_id')
                         ->join('disciplinas','disciplinas.id','aulas.disciplina_id')
                         ->where('aulas.status',1)
+                        ->with('emAtendimento')
+                        ->orderBy('salas.titulo')
+                        ->get();
+    }
+
+    public function aulasala($id){
+        return Aula::select( 'aulas.id','salas.id as sala_id','professors.id as professor_id'
+                                    ,'salas.titulo as sala'
+                                    ,DB::raw("(SUBSTRING_INDEX(professors.name, ' ', 1)) as professor")
+                                    ,'disciplinas.titulo as disciplina' )
+                        ->join('salas','salas.id','aulas.sala_id')
+                        ->join('professors','professors.id','aulas.professor_id')
+                        ->join('disciplinas','disciplinas.id','aulas.disciplina_id')
+                        ->where('aulas.status',1)
+                        ->where('aulas.sala_id',$id)
                         ->with('emAtendimento')
                         ->orderBy('salas.titulo')
                         ->get();
@@ -94,6 +111,7 @@ class Aula extends Model
                     if($this->create($data)){
                         DB::commit();
                         Event::dispatch(new AulasAtivasEvent());
+                        Event::dispatch(new AulaSalaEvent($data['sala_id']));
                         return true;
                     }
                 }
@@ -103,6 +121,7 @@ class Aula extends Model
 
                     DB::commit();
                     Event::dispatch(new AulasAtivasEvent());
+                    Event::dispatch(new AulaSalaEvent($data['sala_id']));
                     return true;
                 }
             }

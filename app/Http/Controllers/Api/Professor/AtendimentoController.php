@@ -6,6 +6,7 @@ use App\Events\AulasAtivasEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Professor\Atendimento\ChamarAtendimentoRequest;
 use App\Models\Atendimento;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 
@@ -22,8 +23,9 @@ class AtendimentoController extends Controller
 
         $dataForm  = $request->only('aula_id');
 
-        if($this->atendimento->chamarProximo($dataForm)){
-            return response()->json(true, 201);
+        $response = $this->atendimento->chamarProximo($dataForm);
+        if($response['result']){
+            return response()->json($response, 201);
         }else{
             return response()->json([
                 'message'   => 'Erro ao Chamar Próximo',
@@ -63,5 +65,9 @@ class AtendimentoController extends Controller
         }
     }
 
+    public function getAluno($id){
+        $aluno = new User();
+        return $aluno->find($id);
+    }
 
 }

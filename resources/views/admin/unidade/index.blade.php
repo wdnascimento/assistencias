@@ -29,9 +29,8 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Unidade / Turma</th>
-                                <th>Sala</th>
+                                <th>ID</th>
+                                <th>Titulo</th>
                                 <th>Operação</th>
                             </tr>
                             </thead>
@@ -39,11 +38,9 @@
                                 @foreach ($data as $item)
                                 <tr>
                                     <td>{{ $item['id']}}</td>
-                                    <td>{{ $item['desc_unidade']}} / {{ $item['desc_turma']}}</td>
                                     <td>{{ $item['titulo']}}</td>
                                     <td>
                                         <a href="{{ route($params['main_route'].'.edit', $item['id']) }}" class="btn btn-info btn-xs"><span class="fas fa-edit"></span> Editar</a>
-                                        <a href="{{ route($params['main_route'].'.show', $item['id']) }}" class="btn btn-danger btn-xs"><span class="fas fa-trash"></span> Deletar</a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -52,9 +49,6 @@
 
                             </tbody>
                         </table>
-                        <div class="box-footer clearfix p-3 d-flex justify-content-end align-content-center">
-                            {{ $data->links() }}
-                        </div>
                     @else
                         <div class="alert alert-success m-2" role="alert">
                             Nenhuma informação cadastrada.

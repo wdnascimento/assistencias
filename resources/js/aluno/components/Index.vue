@@ -70,7 +70,7 @@ export default {
             return (user_id == this.user_id) ? 'font-weight-bold text-light bg-dark' : '';
         },
         carregarAulas(){
-            axios.get('/assistencias/api/aulasativas',{ assinc : true})
+            axios.get(process.env.MIX_APP_URL+'/api/aulasativas',{ assinc : true})
                 .then(response => {
                     this.$store.commit('setAulas',response.data) ;
                     this.listenChannel();

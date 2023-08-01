@@ -11,15 +11,26 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Professor\Atendimento\ChamarAtendimentoRequest;
+use App\Models\Disciplina;
+use App\Models\Turma;
+use App\Models\Unidade;
 
 class AtendimentoController extends Controller
 {
-    public function __construct(Atendimento $atendimentos, Aula $aulas, Sala $salas, User $alunos)
+    private $atendimento;
+    private $sala;
+    private $turma;
+    private $params;
+    private $unidade;
+    private $disciplina;
+
+    public function __construct(Atendimento $atendimentos, Aula $aulas, Sala $salas, Unidade $unidades, Turma $turmas, Disciplina $disciplinas)
     {
         $this->atendimento = $atendimentos;
-        $this->aula = $aulas;
+        $this->unidade = $unidades;
         $this->sala = $salas;
-        $this->aluno = $alunos;
+        $this->turma = $turmas;
+        $this->disciplina = $disciplinas;
 
         // Default values
         $this->params['titulo']='Atendimento';
@@ -32,46 +43,106 @@ class AtendimentoController extends Controller
         // PARAMS DEFAULT
         $this->params['subtitulo']='Atendimentos';
         $this->params['arvore'][0] = [
-                    'url' => 'admin/atendimento',
-                    'titulo' => 'Atendimento'
+                    'url' => 'professor/atendimento',
+                    'titulo' => 'Unidade'
         ];
 
         $params = $this->params;
+        $data['unidades'] =  $this->unidade->all();
 
+        return view('professor.atendimento.unidade',compact('params','data'));
+    }
 
-        /*
-            SELECT * FROM atendimentos at
-                INNER JOIN aulas au
-                ON au.id = at.aula_id
-                WHERE au.sala_id = 2
-                AND au.status = 1
-                AND au.status IN (0,1)
-                ORDER BY at.ordem, at.status desc
-        */
+    public function unidade($unidade_id)
+    {
+        // PARAMS DEFAULT
+        $this->params['subtitulo']='Unidade';
+        $this->params['arvore'][0] = [
+                    'url' => 'professor/atendimento',
+                    'titulo' => 'Unidade'
+        ];
+        $unidade =  $this->unidade->find($unidade_id);
 
-        $data['sala_ativa'] =  DB::table('aulas','au')
-                                    ->join('salas as sa','sa.id', 'au.sala_id')
-                                    ->select('sa.titulo as titulo', 'au.sala_id as sala_id' , 'au.id as aula_id' )
-                                    ->where('au.status',1)
-                                    ->where('au.professor_id', Auth::User()->id)->first();
+        $this->params['arvore'][1] = [
+                    'url' => 'professor/atendimento/unidade/'.$unidade_id,
+                    'titulo' => $unidade['titulo']
+        ];
 
-        if($data['sala_ativa']){
-            $data['espera'] = DB::table('atendimentos','at')
-                ->join('aulas as au', 'au.id', '=', 'at.aula_id')
-                ->join('users as us', 'us.id' , 'at.user_id')
-                ->join('disciplinas as di', 'di.id' , 'au.disciplina_id')
-                ->join('professors as pr', 'pr.id' , 'au.professor_id')
-                ->select('at.aula_id as aula_id', 'au.sala_id as sala_id' , DB::raw("SUBSTRING_INDEX(pr.name, ' ', 1) as professor"),  DB::raw("SUBSTRING_INDEX(us.name, ' ', 1) as nome"), 'at.status as status', 'us.name as nome_completo', 'us.numero as numero', 'us.cabine as cabine', 'di.titulo as titulo_disciplina')
-                ->where('au.sala_id',$data['sala_ativa']->sala_id )
-                ->where('au.status',1)
-                ->whereIn('at.status',[0,1])
-                ->orderBy('at.ordem')
-                ->orderBy('at.status', 'desc')
-                ->paginate(5);
-        }
+        $params = $this->params;
+        $data['turmas'] =  $this->turma->where('unidade_id',$unidade_id)->get();
+        $data['unidade_id']= $unidade_id;
+        return view('professor.atendimento.turma',compact('params','data'));
+    }
 
+    public function turma($unidade_id, $turma_id)
+    {
+        // PARAMS DEFAULT
+        $this->params['subtitulo']='Atendimentos';
+        $this->params['arvore'][0] = [
+                    'url' => 'professor/atendimento',
+                    'titulo' => 'Unidade'
+        ];
+        // Get Unidade
+        $unidade =  $this->unidade->find($unidade_id);
+        $this->params['arvore'][1] = [
+            'url' => 'professor/atendimento/unidade/'.$unidade_id,
+            'titulo' => $unidade['titulo']
+        ];
 
-        return view('professor.atendimento.index',compact('params','data'));
+        // Get Turma
+        $turma =  $this->turma->find($turma_id);
+        $this->params['arvore'][2] = [
+                    'url' => 'professor/atendimento/unidade/'.$unidade_id.'/turma/'.$turma_id,
+                    'titulo' => $turma['titulo']
+        ];
+
+        $params = $this->params;
+        $data['salas'] =  $this->sala->where('turma_id',$turma_id)->get();
+        $data['unidade_id']= $unidade_id;
+        $data['turma_id']= $turma_id;
+
+        return view('professor.atendimento.sala',compact('params','data'));
+    }
+
+    public function sala($unidade_id, $turma_id, $sala_id)
+    {
+        // PARAMS DEFAULT
+        $this->params['subtitulo']='Atendimentos';
+        $this->params['arvore'][0] = [
+                    'url' => 'professor/atendimento',
+                    'titulo' => 'Atendimento'
+        ];
+
+        // Get Unidade
+        $unidade =  $this->unidade->find($unidade_id);
+        $this->params['arvore'][1] = [
+            'url' => 'professor/atendimento/unidade/'.$unidade_id,
+            'titulo' => $unidade['titulo']
+        ];
+
+        // Get Turma
+        $turma =  $this->turma->find($turma_id);
+        $this->params['arvore'][2] = [
+                    'url' => 'professor/atendimento/unidade/'.$unidade_id.'/turma/'.$turma_id,
+                    'titulo' => $turma['titulo']
+        ];
+
+        // Get Sala
+        $sala =  $this->sala->find($sala_id);
+        $this->params['arvore'][3] = [
+                    'url' => 'professor/atendimento/unidade/'.$unidade_id.'/turma/'.$turma_id.'/sala/'.$sala_id,
+                    'titulo' => $sala['titulo']
+        ];
+
+        $params = $this->params;
+        $data['sala'] =  $this->sala->find($sala_id);
+        $preload['disciplinas'] = $this->disciplina->select('id','titulo')->orderBy('titulo')->pluck('titulo','id');
+        $data['sala'] =  $this->sala->find($sala_id);
+        $data['unidade_id']= $unidade_id;
+        $data['turma_id']= $turma_id;
+        $data['sala_id']= $sala_id;
+
+        return view('professor.atendimento.index',compact('params','data','preload'));
     }
 
     public function chamar(ChamarAtendimentoRequest  $request)
@@ -89,8 +160,6 @@ class AtendimentoController extends Controller
        $dataForm  = $request->all();
 
         if($this->atendimento->chamarProximo($dataForm['aula_id'])){
-
-
             return redirect()->route($this->params['main_route'].'.index');
         }else{
             return redirect()->route($this->params['main_route'].'.chamar')->withErrors(['Falha ao editar.']);
