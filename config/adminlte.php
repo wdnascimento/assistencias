@@ -347,22 +347,22 @@ return [
             /* 'label'       => 4,
             'label_color' => 'success', */
         ],
-        [
-            'text'        => 'Atendimento',
-            'url'         => 'admin/atendimento',
-            'icon'        => 'fas fa-sync',
-            'can'         => ['administrador','atendimento']
-            /* 'label'       => 4,
-            'label_color' => 'success', */
-        ],
-        [
-            'text'        => 'Aulas',
-            'url'         => 'admin/aula',
-            'icon'        => 'fas fa-desktop',
-            'can'         => ['administrador']
-           /* 'label'       => 4,
-            'label_color' => 'success', */
-        ],
+        // [
+        //     'text'        => 'Atendimento',
+        //     'url'         => 'admin/atendimento',
+        //     'icon'        => 'fas fa-sync',
+        //     'can'         => ['administrador','atendimento']
+        //     /* 'label'       => 4,
+        //     'label_color' => 'success', */
+        // ],
+        // [
+        //     'text'        => 'Aulas',
+        //     'url'         => 'admin/aula',
+        //     'icon'        => 'fas fa-desktop',
+        //     'can'         => ['administrador']
+        //    /* 'label'       => 4,
+        //     'label_color' => 'success', */
+        // ],
         ['header' => 'Parametrização' , 'can'         => ['administrador']],
         [
             'text'        => 'Unidades',

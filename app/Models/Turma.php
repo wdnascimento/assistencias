@@ -19,6 +19,6 @@ class Turma extends Model
     public function getDescUnidadeAttribute()
     {
         $unidade = new Unidade();
-        return $unidade->select('titulo')->where('id',$this->unidade_id)->first()->titulo;
+        return ($unidade = $unidade->select('titulo')->where('id',$this->unidade_id)->first()) ? $unidade->titulo : '';
     }
 }

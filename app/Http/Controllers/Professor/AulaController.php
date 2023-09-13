@@ -45,7 +45,13 @@ class AulaController extends Controller
         ];
 
         $params = $this->params;
-        $data = $this->aula->orderBy('inicio','desc')->orderBy('status','desc')->paginate(10);
+        $data = $this->aula
+                        ->where('professor_id', Auth::user()->id)
+                        ->with('atendimentos')
+                        ->with('atendidos')
+                        ->orderBy('inicio','desc')
+                        ->orderBy('status','desc')
+                        ->paginate(20);
 
         return view('professor.aula.index',compact('params','data'));
     }

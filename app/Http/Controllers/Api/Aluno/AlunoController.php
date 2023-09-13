@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Api\Aluno;
 
-use App\Events\AulasAtivasEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Aluno\DesistirSenhaRequest;
 use App\Http\Requests\Api\Aluno\PegarSenhaRequest;
 use App\Models\Atendimento;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Event;
 
 class AlunoController extends Controller
 {

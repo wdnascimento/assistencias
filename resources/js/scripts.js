@@ -1,15 +1,30 @@
 $(function() {
-    $('#numero').mask('00000000', {reverse: true});
-    $('#password').mask('00000000', {reverse: true});
+    $('#celular').mask('(00) 00000-0000');
     $('#password_aluno').mask('00000000', {reverse: true});
+    $('.numero').mask('00000000', {reverse: true});
+    $('.cabine').mask('00', {reverse: true});
 
     if(! $("#trocar_senha_aluno").is(":checked")){
         $("#update_password_aluno").hide();
         $("#password_aluno").prop('disabled', true);
     }
+    if(! $("#send_sms").is(":checked")){
+        $("#div_celular").hide();
+        $("#celular").prop('disabled', true);
+    }
 
 
-    $("#trocar_senha_aluno").click(function () {
+    $("#send_sms").on('click', function () {
+        if ($(this).is(":checked")) {
+            $("#div_celular").show();
+            $("#celular").prop('disabled', false);
+        } else {
+            $("#div_celular").hide();
+            $("#celular").prop('disabled', true);
+        }
+    });
+
+    $("#trocar_senha_aluno").on('click', function () {
         if ($(this).is(":checked")) {
             $("#update_password_aluno").show();
             $("#password_aluno").prop('disabled', false);

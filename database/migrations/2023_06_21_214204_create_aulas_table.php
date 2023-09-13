@@ -19,7 +19,7 @@ class CreateAulasTable extends Migration
             $table->bigInteger('professor_id')->unsigned();
             $table->bigInteger('sala_id')->unsigned();
 
-            $table->datetime('inicio')->useCurrent();
+            $table->datetime('inicio')->nullable();
             $table->datetime('fim')->nullable()->default(NULL);
 
             $table->boolean('status')->default(true);

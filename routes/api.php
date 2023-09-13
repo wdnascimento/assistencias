@@ -24,13 +24,13 @@ Route::get('/aulasala/{aula_id}', [AulaController::class,'aulasala'])->name('api
 Route::get('/filaaula/{aula_id}', [AtendimentoController::class,'filaaula'])->name('api.aluno.filaaula');
 
 
-Route::group(['middleware' => ['auth', 'throttle:500|2200,1']], function () {
+Route::group(['middleware' => ['auth', 'throttle:2200,1']], function () {
     Route::get('/aluno', [IndexController::class,'index'])->name('api.aluno.home');
     Route::post('/pegarsenha', [AlunoController::class,'pegarsenha'])->name('api.aluno.pegarsenha');
     Route::post('/desistirsenha', [AlunoController::class,'desistirsenha'])->name('api.aluno.desistirsenha');
 });
 
-Route::group(['middleware' => ['auth:professor', 'throttle:500|2200,1']], function () {
+Route::group(['middleware' => ['auth:professor', 'throttle:2200,1']], function () {
     Route::post('/cadastraraula', [ProfessorAulaController::class,'cadastraraula'])->name('api.professor.cadastraraula');
     Route::post('/chamar', [ProfessorAtendimentoController::class,'chamar'])->name('api.professor.chamar');
     Route::post('/pausar', [ProfessorAtendimentoController::class,'pausar'])->name('api.professor.pausar');
@@ -38,7 +38,7 @@ Route::group(['middleware' => ['auth:professor', 'throttle:500|2200,1']], functi
     Route::get('/getAluno', [ProfessorAtendimentoController::class,'getAluno'])->name('api.professor.aluno');
 });
 
- Route::group(['middleware' => ['auth', 'throttle:500|2200,1']], function () {
+ Route::group(['middleware' => ['auth', 'throttle:2200,1']], function () {
     Route::post('/broadcasting/auth',function(){
             return true;
     });

@@ -30,21 +30,24 @@
                             <thead>
                             <tr>
                                 <th>Ano</th>
-                                <th>Cabine</th>
-
                                 <th>Número</th>
                                 <th>Nome</th>
+                                <th>Cabine / Celular</th>
                                 <th>Operação</th>
                             </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data as $item)
-                                <tr @if($item['cabine'] == '99') class="table-warning" @endif>
+                                <tr @if( $item['send_sms'] == '0' && $item['cabine'] == '0') class="table-warning" @endif title="Aluno sem ensalamento">
                                     <td>{{ $item['ano']}}</td>
-                                    <td >{{ $item['cabine']}}</td>
-
                                     <td>{{ $item['numero']}}</td>
                                     <td>{{ $item['name']}}</td>
+                                    @if($item['send_sms'] == '0')
+                                    <td ><strong>Cab:</strong> {{ $item['cabine']}}</td>
+                                    @else
+                                    <td ><strong>Cel:</strong> {{ $item['celular']}}</td>
+                                    @endif
+
                                     <td>
                                         <a href="{{ route($params['main_route'].'.edit', $item['id']) }}" class="btn btn-info btn-xs"><span class="fas fa-edit"></span> Editar</a>
                                         <a href="{{ route($params['main_route'].'.show', $item['id']) }}" class="btn btn-danger btn-xs"><span class="fas fa-trash"></span> Deletar</a>

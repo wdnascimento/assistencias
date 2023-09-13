@@ -53,6 +53,9 @@
                             turma_id => Deve corresponder ao id do cadastro de turmas;
                             <br>
                             cabine => Não obrigatório para quando informado o celular;
+                            <br>
+                            celular => Não obrigatório para quando informado a cabine;
+
                         </div>
                         <div class="form-group col-12 col-md-12 col-lg-12 pt-2">
                             {{Form::submit('Salvar',['class'=>'btn btn-success btn-sm'])}}

@@ -17,7 +17,7 @@
                 <div class="card-body ">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 ">
-                            <a href="{{ route($params['main_route'].'.aula.create')}}" class="small-box-footer">
+                            <a href="{{ route($params['main_route'].'.aula.index')}}" class="small-box-footer">
                                 <!-- small box -->
                                 <div class="small-box bg-primary">
                                     <div class="inner">

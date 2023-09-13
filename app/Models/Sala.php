@@ -12,6 +12,6 @@ class Sala extends Model
 
     public function getDescTurmaAttribute(){
         $turma = new Turma();
-        return $turma->select('titulo')->where('id',$this->turma_id)->first()->titulo;
+        return ($turma = $turma->select('titulo')->where('id',$this->turma_id)->first()) ? $turma->titulo : '';
     }
 }

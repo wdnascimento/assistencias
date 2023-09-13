@@ -74,12 +74,15 @@ class Aula extends Model
         return $this->hasMany(Atendimento::class)->where('status',0);
     }
 
+    public function atendidos(){
+        return $this->hasMany(Atendimento::class)->whereIn('status',[1,2]);
+    }
+
     public function emAtendimento(){
         return $this->hasMany(Atendimento::class)
                     ->select( 'atendimentos.aula_id'
                                 , DB::raw("(SELECT CONCAT(u.numero, ' - ',SUBSTRING_INDEX(u.name, ' ', 1)) FROM users u WHERE u.id = atendimentos.user_id) as nome"))
-                    ->where('atendimentos.status',1)
-                    ->limit(1);
+                    ->where('atendimentos.status',1);
     }
 
     public function fila(){

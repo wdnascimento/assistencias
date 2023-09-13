@@ -4,6 +4,7 @@ namespace App\Models ;
 
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable , SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -19,11 +20,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'numero', 'cabine','ano'
+        'name', 'numero', 'cabine','ano','send_sms','celular', 'turma_id','password'
     ];
 
     protected $hidden = [
-        'password',
+        'password'
     ];
 
     public function messages()
@@ -37,7 +38,7 @@ class User extends Authenticatable
             // PROCURA ALUNO NESTA CABINE
             $cabines = $this->select('id')->where('cabine',$data['cabine'])->where('ano',$data['ano'])->get()->pluck('id')->toArray();
             if($cabines != null){
-                if(! $this->whereIn('id',$cabines)->update(array('cabine' => '99'))){
+                if(! $this->whereIn('id',$cabines)->update(array('cabine' => '0'))){
                     DB::rollback();
                     return false;
                 }
@@ -61,7 +62,7 @@ class User extends Authenticatable
             // PROCURA ALUNO NESTA CABINE
             $cabines = $this->select('id')->where('cabine',$data['cabine'])->where('ano',$data['ano'])->where('id','<>',$id)->get()->pluck('id')->toArray();
             if($cabines != null){
-                if(! $this->whereIn('id',$cabines)->update(array('cabine' => '99'))){
+                if(! $this->whereIn('id',$cabines)->update(array('cabine' => '0'))){
                     DB::rollback();
                     return false;
                 }

@@ -6,10 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Arquivo\ArquivoRequest;
 use App\Models\Arquivo;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class ArquivoController extends Controller
 {
+    private $user;
+    private $arquivo;
+    private $params;
+
     public function __construct(Arquivo $arquivos, User $users)
     {
 
@@ -81,7 +87,6 @@ class ArquivoController extends Controller
 
     }
 
-
     public function import($id)
     {
         $this->params['subtitulo']='Importar Arquivo';
@@ -110,39 +115,79 @@ class ArquivoController extends Controller
 
                 $csv = [];
                 $file_handle = fopen(url($url), 'r',false,$streamSSL);
+
+                $titulos = null;
+                // REQUIRED FIELDS
+                $fields = array("turma_id","ano","name","numero","data_nascimento");
+                // FLAG FIELDS
+                $fields_flag = array("celular","cabine");
+                // MAP FIELDS
+                $map_fields = NULL;
+                // INDICE
+                $i=0;
                 while (!feof($file_handle)) {
-                    $csv[] = fgetcsv($file_handle, 0,',');
+                    $csv = fgetcsv($file_handle, 0,',');
+                    if($titulos == null){
+                        // GET TITLES
+                        // TO LOWER AND TRIM TITLES
+                        $titulos= array_map('strtolower',array_map('trim', $csv));
+                        // VALIDATE FOR REQUIREDS COLUMNS
+                        foreach($fields as $v){
+                            if (! in_array(trim($v),$titulos) ) {
+                                return redirect()->back()->withErrors(['Erro importar (Coluna '.$v.' faltante no arquivo).']);
+                            }
+                            $map_fields[$v]=array_search(trim($v),$titulos);
+                        }
+                        // VALIDADE FOR REQUIREDS COLUMNS
+                        $flag=0;
+                        foreach($fields_flag as $v){
+                            if (in_array(trim($v),$titulos ) ) {
+                                $flag++;
+                            }
+                            $map_fields[$v]=array_search(trim($v),$titulos);
+
+                        }
+                        if($flag == 0){
+                            return redirect()->back()->withErrors(['Erro importar (Colunas '.implode(", ", $fields_flag).' faltante no arquivo).']);
+                        }
+                    }else{
+
+                        foreach($map_fields as $column => $value){
+                            switch($column){
+                                case "data_nascimento" :
+                                    $tmp_data["password"]= Hash::make(preg_replace('/[^0-9]/', '', $csv[$value]));
+                                break;
+                                case 'celular' :
+                                    if($csv[$value] != ""){
+                                        $tmp_data["send_sms"] = 1;
+                                    }
+                                    $tmp_data[$column]=$csv[$value];
+                                break;
+                                default:
+                                    $tmp_data[$column]=$csv[$value];
+                                break;
+                            }
+                        }
+
+
+
+                        $aluno = $this->user->where('numero',$tmp_data["numero"])->first();
+                        if($aluno){
+                            if(!$aluno->update($tmp_data)){
+                                return redirect()->back()->withErrors(['Erro importar (Atualizar) (Linha '.$i.' => '.implode(", ", $csv).').']);
+                            }
+                        }else{
+                            if(!$this->user->create($tmp_data)){
+                                return redirect()->back()->withErrors(['Erro importar (Linha '.$i.' => '.implode(", ", $csv).').']);
+                            }
+
+                        }
+                        $i++;
+                    }
                 }
                 fclose($file_handle);
 
-                // GET TÍTULOS
-                $titulos = array_shift($csv);
-                // TRIM TITLES
-                $titulos= array_map('trim', $titulos);
 
-                // CAMPOS ESPERADOS
-                // id, turma_id, ano, name, numero, password, celular, cabine, send_sms
-                $fields = array("turma_id","ano","name","numero","celular","data_nascimento");
-
-                // VALIDA COLUNAS NO FILE
-                foreach($fields as $i => $v){
-
-                    if (! in_array(trim($v),$titulos ) ) {
-                        return redirect()->back()->withErrors(['Erro importar (Coluna '.$v.' faltante no arquivo).']);
-                    }
-
-                }
-
-                $tmp_fields = '';
-                foreach ($csv as $id => $value){
-                    foreach($value as $id2 => $value2){
-                        // if(isset($titulos[$id])){
-                          $tmp_fields.=$id2. "=> ".   $value2;
-                        // }
-
-                    }
-                }
-                dd($tmp_fields);
 
 
         }

@@ -49,6 +49,10 @@
                         {{Form::text('numero',$data->numero,['class' => 'form-control','readonly'=>'readonly'])}}
                     </div>
                     <div class="form-group">
+                        {{Form::label('celular', 'Celular')}}
+                        {{Form::text('celular',$data->celular,['class' => 'form-control', 'placeholder' => 'Celular','readonly'=>'readonly'])}}
+                    </div>
+                    <div class="form-group">
                         {{Form::label('cabine', 'Cabine')}}
                         {{Form::text('cabine',$data->cabine,['class' => 'form-control', 'placeholder' => 'Cabine','readonly'=>'readonly'])}}
                     </div>

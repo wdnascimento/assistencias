@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\TurmaController;
 use App\Http\Controllers\Admin\UnidadeController;
 use App\Http\Controllers\Aluno\HomeController as AlunoHomeController;
 use App\Http\Controllers\Auth\Admin\LoginController;
+use App\Http\Controllers\Auth\LoginController as AuthLoginController;
 use App\Http\Controllers\Auth\Professor\LoginController as ProfessorLoginController;
 use App\Http\Controllers\HomeController as ControllersHomeController;
 use App\Http\Controllers\Professor\AtendimentoController;
@@ -26,14 +27,13 @@ Route::get('/', function () {
     return view('index');
 });
 
-
-
 Route::get('/index', function () {
     return view('welcome');
 });
 
 Route::group(['prefix' => 'aluno'], function(){
     Auth::routes();
+    Route::post('login', [AuthLoginController::class, 'postLogin'])->name('aluno.login.post');
 });
 
 Route::group(['prefix' => 'aluno','middleware' => 'auth','namespace' => 'Aluno'], function(){
@@ -90,7 +90,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Auth\Admin'], function(){
 
 // END ADMIN ROUTES
 
-Route::get('admin/salas', [AdminIndexController::class,'salas'])->name('admin.salas');
+// Route::get('admin/salas', [AdminIndexController::class,'salas'])->name('admin.salas');
 
 Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'Admin'],function(){
 
@@ -190,6 +190,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
 });
 
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/home', [ControllersHomeController::class, 'index'])->name('home');

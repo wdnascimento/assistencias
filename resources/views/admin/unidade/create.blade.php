@@ -47,7 +47,7 @@
                     @endif
                     <div class="row">
                         <div class="form-group col-6">
-                            {{Form::label('titulo', 'Título da Turma')}}
+                            {{Form::label('titulo', 'Título da Unidade')}}
                             {{Form::text('titulo',null,['class' => 'form-control', 'placeholder' => 'Título'])}}
                         </div>
                         <div class="form-group col-12">

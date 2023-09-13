@@ -7,12 +7,11 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 
-        <link href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
-        <link rel="shortcut icon" href="{{ asset('favicon/favicon-96x96.png') }}" type="image/png">
-        <link rel="icon" href="{{ asset('favicon/favicon-96x96.png') }}" type="image/png">
+        @include('layouts.favicon')
         <!-- Styles -->
     </head>
     <body>
@@ -32,15 +31,15 @@
             <div class="container">
                 <div  id="" class="row justify-content-center flex-wrap pt-5 px-2"">
                     <div class="col-12 col-md-6 col-lg-6 col-xl-6" >
-                        <a href="#" class="pt-2" onclick="window.location.href='{{ url('aluno') }}'">
-                             <div class="small-box p-3 bg-gradient-orange text-center">
+                        <a href="#" class="pt-2 link-offset-2 link-underline link-underline-opacity-0" onclick="window.location.href='{{ url('aluno') }}'">
+                             <div class="shadow-lg p-3 mb-5  rounded p-3 bg-warning text-center">
                                 <h1 class="font-weight-bold">Aluno</h1>
                             </div>
                         </a>
                     </div>
                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                        <a href="#" class="pt-2" onclick="window.location.href='{{ url('professor') }}'">
-                            <div class="small-box p-3 bg-gradient-orange text-center">
+                        <a href="#" class="pt-2 link-offset-2 link-underline link-underline-opacity-0" onclick="window.location.href='{{ url('professor') }}'">
+                            <div class="shadow-lg p-3 mb-5  rounded p-3 bg-warning text-center">
                                 <h1 class="font-weight-bold">Professor</h1>
                             </div>
                         </a>

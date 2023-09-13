@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Aluno\LoginRequest;
 use App\Providers\RouteServiceProvider;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -41,5 +44,16 @@ class LoginController extends Controller
     public function username()
     {
         return 'numero';
+    }
+
+
+    public function postLogin(LoginRequest $request){
+
+        $credentials = $request->only('numero', 'password');
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->intended(route('aluno.home'));
+        }
+        return redirect()->back()->withErrors(['auth' => 'Usuário ou senha não conferem']);
     }
 }

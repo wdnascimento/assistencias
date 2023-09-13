@@ -164,7 +164,7 @@ class Atendimento extends Model
             $aula = new Aula();
             // testa se a aula está ativa e pega a sala_id
             if($aula = $aula->select('sala_id','status')->where('id',$data['aula_id'])->first()){
-                if($aula['status'] == '1'){
+                if($aula['status'] == '1' && ($this->where('aula_id',$data['aula_id'])->where('user_id',$data['user_id'])->where('status',1)->first() == NULL)){
                     $data['ordem'] = $this->where('aula_id',$data['aula_id'])->withTrashed()->max('ordem') + 1;
                     if($this->create($data)){
                         DB::commit();
@@ -180,6 +180,7 @@ class Atendimento extends Model
                 Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($data['aula_id']));
                 return false;
+
             }
             Event::dispatch(new AulasAtivasEvent());
             Event::dispatch(new FilasAtivasEvent($data['aula_id']));

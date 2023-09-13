@@ -40,47 +40,25 @@
                             <thead>
                             <tr>
                                 <th>Data</th>
-                                <th  class="d-none d-sm-block">Mesa</th>
-
+                                <th>Mesa</th>
                                 <th>Disciplina</th>
 
-                                <th class="d-none d-sm-block">Professor</th>
-                                <th>Operações</th>
+                                <th>Início</th>
+                                <th>Fim</th>
+                                <th>Senhas / Atendidos</th>
                             </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data as $item)
                                 <tr>
-                                    <td >{{ \Carbon\Carbon::parse($item['inicio'])->format('d/m/Y')}}</td>
-                                    <td class="d-none d-sm-block">{{  $item['sala']['titulo']}}</td>
-
+                                    <td>{{ $item['id'] . \Carbon\Carbon::parse($item['inicio'])->format('d/m/Y')}}</td>
+                                    <td>{{  $item['sala']['titulo']}}</td>
                                     <td>{{ $item['disciplina']['titulo']}}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item['inicio'])->format('H:i')}}</td>
+                                    <td>@if($item['fim']){{ \Carbon\Carbon::parse($item['fim'])->format('H:i')}}@else Não Finalizado @endif</td>
+                                    <td>{{ $item->atendimentos->count() }} / {{ $item->atendidos->count() }}  </td>
 
-                                    <td class="d-none d-sm-block">{{ $item['professor']['name'] }}</td>
-                                    <td>
-                                        @if($item['status'])
-                                            {{-- @if ($item['professor_id'] == Auth::User()->id)
-                                                <form id="logout-form-{{ $item['sala_id'] }}" action="{{ route($params['main_route'].'.desativar',$item['id']) }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="sala_id" value="{{ $item['sala_id'] }}">
-                                                    <button type="submit" class="btn btn-primary btn-xs" >Desativar</button>
-                                                </form>
-                                            @else--}}
-                                                <span class=""><i class="fas fa-check"></i> Ativada</span>
-                                            {{-- @endif --}}
-                                        @else
-                                            {{-- @if ($item['professor_id'] == Auth::User()->id)
-                                                <form id="logout-form-{{ $item['sala_id'] }}" action="{{ route($params['main_route'].'.ativar',$item['id']) }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="sala_id" value="{{ $item['sala_id'] }}">
-                                                    <input type="hidden" name="professor_id" value="{{ $item['professor_id'] }}">
-                                                    <button type="submit" class="btn btn-danger btn-xs" >Ativar</button>
-                                                </form>
-                                            @else--}}
-                                                <span class="text-muted"><i class="fas fa-times"></i> Desativada</span>
-                                            {{-- @endif --}}
-                                        @endif
-                                    </td>
+
                                 </tr>
                                 @endforeach
                             </tbody>

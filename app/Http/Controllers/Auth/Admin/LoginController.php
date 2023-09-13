@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Auth\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\LoginRequest;
 use Auth;
 
 class LoginController extends Controller
 {
-    //
-
     protected $redirectTo = '/admin';
 
     public function __construct()
@@ -22,23 +20,15 @@ class LoginController extends Controller
         return Auth::guard('admin');
     }
 
-    public function loginAdmin(Request $request)
+    public function loginAdmin(LoginRequest $request)
     {
-      // Validate the form data
-      $this->validate($request, [
-        'email'   => 'required|email',
-        'password' => 'required|min:6'
-      ]);
       // Attempt to log the user in
       if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
         // if successful, then redirect to their intended location
         return redirect()->intended(route('admin.home'));
       }
       // if unsuccessful, then redirect back to the login with the form data
-
-
-
-      return redirect()->back()->withInput($request->only('email'))->withErrors(['email' => 'Usuário e senha não conferem']);
+      return redirect()->back()->withErrors(['auth' => 'Usuário ou senha não conferem']);
     }
 
     public function login(){

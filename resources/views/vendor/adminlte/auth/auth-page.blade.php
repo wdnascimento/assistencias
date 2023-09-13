@@ -17,7 +17,6 @@
 
 @section('body')
     <div class="{{ $auth_type ?? 'login' }}-box">
-
         {{-- Logo --}}
         <div class="{{ $auth_type ?? 'login' }}-logo">
             <a href="{{ $dashboard_url }}">

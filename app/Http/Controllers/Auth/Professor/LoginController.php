@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth\Professor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Professor\LoginRequest;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -21,21 +22,15 @@ class LoginController extends Controller
         return Auth::guard('professor');
     }
 
-    public function loginProfessor(Request $request)
+    public function loginProfessor(LoginRequest $request)
     {
-      // Validate the form data
-      $this->validate($request, [
-        'email'   => 'required|email',
-        'password' => 'required|min:6'
-      ]);
-
-        // Attempt to log the user in
+      // Attempt to log the user in
       if (Auth::guard('professor')->attempt(['email' => $request->email, 'password' => $request->password])) {
         // if successful, then redirect to their intended location
         return redirect()->intended(route('professor.home'));
       }
       // if unsuccessful, then redirect back to the login with the form data
-      return redirect()->back()->withInput($request->only('email'))->withErrors(['email' => 'Usuário e senha não conferem']);
+      return redirect()->back()->withErrors(['auth' => 'Usuário ou senha não conferem']);
     }
 
     public function login(){

@@ -96,19 +96,13 @@ $index_section = (isset($section) &&  $section != '')? $section : 'aluno'  ;
                         </div>
                         @if ($errors->has('password'))
                             <div class="invalid-feedback">
-                                {{ $errors->first('password') }}
+                                {{  {{ __('adminlte::adminlte.password.'.$errors->first('password')) }} }}
                             </div>
                         @endif
                     </div>
                     @endif
 
                     <div class="row">
-                        {{-- <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" name="remember" id="remember">
-                                <label for="remember">{{ __('adminlte::adminlte.remember_me') }}</label>
-                            </div>
-                        </div> --}}
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block btn-flat">
                                 {{ __('adminlte::adminlte.sign_in') }}
@@ -116,22 +110,6 @@ $index_section = (isset($section) &&  $section != '')? $section : 'aluno'  ;
                         </div>
                     </div>
                 </form>
-                {{-- @if($index_section != 'aluno')
-
-                <p class="mt-2 mb-1">
-                    <a href="{{ $password_reset_url }}">
-                        {{ __('adminlte::adminlte.i_forgot_my_password') }}
-                    </a>
-                </p>
-
-                @endif --}}
-                {{-- @if ($register_url)
-                    <p class="mb-0">
-                        <a href="{{ $register_url }}">
-                            {{ __('adminlte::adminlte.register_a_new_membership') }}
-                        </a>
-                    </p>
-                @endif --}}
             </div>
         </div>
     </div>

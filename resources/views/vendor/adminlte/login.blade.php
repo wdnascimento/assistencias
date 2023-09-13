@@ -2,9 +2,11 @@
 
 @section('adminlte_css_pre')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 @stop
 
 @section('adminlte_css')
+
     @stack('css')
     @yield('css')
 @stop
@@ -34,6 +36,7 @@ $index_section = (isset($section) &&  $section != '')? $section : 'aluno'  ;
 @endif
 
 @section('body')
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <div class="login-box">
         <div class="login-logo">
             <a href="{{ $dashboard_url }}">
@@ -61,70 +64,75 @@ $index_section = (isset($section) &&  $section != '')? $section : 'aluno'  ;
                     {{ csrf_field() }}
                     @if($index_section != 'aluno')
 
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}" autofocus>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                        <div class="input-group mb-3">
+                            <input type="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}" autofocus>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-envelope"></span>
+                                </div>
                             </div>
+                            @if ($errors->has('email'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('email') }}
+                                </div>
+                            @endif
                         </div>
-                        @if ($errors->has('email'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('email') }}
+                        <div class="input-group mb-3">
+                            <input type="password" name="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="{{ __('adminlte::adminlte.password') }}">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-lock"></span>
+                                </div>
                             </div>
-                        @endif
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="{{ __('adminlte::adminlte.password') }}">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
+                            @if ($errors->has('password'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('password') }}
+                                </div>
+                            @endif
                         </div>
-                        @if ($errors->has('password'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('password') }}
-                            </div>
-                        @endif
-                    </div>
-
                     @else
-                    <div class="input-group mb-3">
-                        <input type="text" name="numero" id="numero"  class="form-control {{ $errors->has('numero') ? 'is-invalid' : '' }}" value="{{ old('numero') }}" placeholder="Número" autofocus>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-user"></span>
+                        <div class="input-group mb-3">
+                            <input type="text" name="numero" id="numero"  class="form-control {{ $errors->has('numero') ? 'is-invalid' : '' }}" value="{{ old('numero') }}" placeholder="Número" autofocus>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-user"></span>
+                                </div>
                             </div>
+                            @if ($errors->has('numero'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('numero') }}
+                                </div>
+                            @endif
                         </div>
-                        @if ($errors->has('numero'))
-
-                            <div class="invalid-feedback">
-                                {{ $errors->first('numero') }}
+                        <div class="input-group mb-3">
+                            <input type="password" name="password" id="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="{{ __('adminlte::adminlte.password') }}">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-lock"></span>
+                                </div>
                             </div>
-                        @endif
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" id="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="{{ __('adminlte::adminlte.password') }}">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
+                            @if ($errors->has('password'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('password') }}
+                                </div>
+                            @endif
                         </div>
-                        @if ($errors->has('password'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('password') }}
-                            </div>
-                        @endif
+                    @endif
+                    @if ($errors->has('auth') )
+                        <div class="text-center pb-3">
+                            {{ $errors->first('auth')}}
+                        </div>
+                    @endif
+                    <div class="row justify-content-center pb-3">
+                        <div class="g-recaptcha" data-sitekey="6LfA5egnAAAAACqJYKK2j-UFj-MRxNnMqcxv1nHX"></div>
                     </div>
+                    @if ($errors->has('g-recaptcha-response') )
+                        <div class="invalid pb-3">
+                            {{ $errors->first('g-recaptcha-response')}}
+                        </div>
                     @endif
 
                     <div class="row">
-                        {{-- <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" name="remember" id="remember">
-                                <label for="remember">{{ __('adminlte::adminlte.remember_me') }}</label>
-                            </div>
-                        </div> --}}
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block btn-flat">
                                 {{ __('adminlte::adminlte.sign_in') }}
@@ -132,22 +140,7 @@ $index_section = (isset($section) &&  $section != '')? $section : 'aluno'  ;
                         </div>
                     </div>
                 </form>
-                {{-- @if($index_section != 'aluno')
 
-                <p class="mt-2 mb-1">
-                    <a href="{{ $password_reset_url }}">
-                        {{ __('adminlte::adminlte.i_forgot_my_password') }}
-                    </a>
-                </p>
-
-                @endif --}}
-                {{-- @if ($register_url)
-                    <p class="mb-0">
-                        <a href="{{ $register_url }}">
-                            {{ __('adminlte::adminlte.register_a_new_membership') }}
-                        </a>
-                    </p>
-                @endif --}}
             </div>
         </div>
     </div>

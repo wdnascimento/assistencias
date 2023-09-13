@@ -69,7 +69,7 @@ class AtendimentoController extends Controller
         ];
 
         $params = $this->params;
-        $data['turmas'] =  $this->turma->where('unidade_id',$unidade_id)->get();
+        $data['turmas'] =  $this->turma->where('unidade_id',$unidade_id)->orderBy('titulo')->get();
         $data['unidade_id']= $unidade_id;
         return view('professor.atendimento.turma',compact('params','data'));
     }
@@ -97,7 +97,7 @@ class AtendimentoController extends Controller
         ];
 
         $params = $this->params;
-        $data['salas'] =  $this->sala->where('turma_id',$turma_id)->get();
+        $data['salas'] =  $this->sala->where('turma_id',$turma_id)->orderBy('titulo')->get();
         $data['unidade_id']= $unidade_id;
         $data['turma_id']= $turma_id;
 

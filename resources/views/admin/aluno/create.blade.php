@@ -58,28 +58,40 @@
                     </div>
                     <div class="form-group">
                         {{Form::label('numero', 'Número')}}
-                        {{Form::text('numero',null,['class' => 'form-control', 'placeholder' => 'Número'])}}
+                        {{Form::text('numero',null,['class' => 'form-control numero', 'placeholder' => 'Número'])}}
                     </div>
+                    <div class="form-group text-left">
+                        {{Form::label('send_sms', 'Enviar SMS?')}}
+                        <br>
+                        {{Form::checkbox('send_sms',1,false)}}
+                    </div>
+
+                    <div id="div_celular" class="form-group">
+                        {{Form::label('celular', 'Celular')}}
+                        <br>
+                        {{Form::text('celular',null, ['class' => 'form-control', 'placeholder' => 'Celular'])}}
+                    </div>
+
                     <div class="form-group">
                         {{Form::label('cabine', 'Cabine')}}
-                        {{Form::text('cabine',null,['class' => 'form-control', 'placeholder' => 'Cabine'])}}
+                        {{Form::text('cabine',null,['class' => 'form-control cabine', 'placeholder' => 'Cabine'])}}
                     </div>
                     @if(! isset($data))
                         <div class="form-group">
-                            {{Form::label('password', 'Senha - Somente Números')}}
+                            {{ Form::label('password', 'Senha - Somente Números')}}
                             <br>
-                            {{Form::password('password',['class' => 'form-control'])}}
+                            {{ Form::password('password',['class' => 'form-control'])}}
                         </div>
                     @else
                         <div class="form-group text-left">
-                            {{Form::label('trocar_senha_aluno', 'Trocar Senha?')}}
+                            {{ Form::label('trocar_senha_aluno', 'Trocar Senha?')}}
                             <br>
-                            {{Form::checkbox('trocar_senha_aluno',1,false)}}
+                            {{ Form::checkbox('trocar_senha_aluno',1,false)}}
                         </div>
                         <div id="update_password_aluno" class="form-group">
-                            {{Form::label('password_aluno', 'Senha - Somente Números')}}
+                            {{ Form::label('password_aluno', 'Senha - Somente Números')}}
                             <br>
-                            {{Form::password('password_aluno',['class' => 'form-control'])}}
+                            {{ Form::password('password_aluno',['class' => 'form-control'])}}
                         </div>
 
                     @endif
