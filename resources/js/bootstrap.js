@@ -39,6 +39,9 @@ import Echo from 'laravel-echo';
 
 window.Pusher = require('pusher-js');
 
+//  -------------------
+//  PUSHER CONFIG
+//  -------------------
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
@@ -55,5 +58,26 @@ window.Echo = new Echo({
     authEndpoint: process.env.MIX_APP_URL+'/api/endpoint/auth'
 
 });
+
+//  -------------------
+//  SOKETI CONFIG
+//  -------------------
+
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: process.env.MIX_PUSHER_APP_KEY,
+//     wsHost: process.env.MIX_PUSHER_HOST,
+//     wsPort: process.env.MIX_PUSHER_PORT,
+//     wssPort: process.env.MIX_PUSHER_PORT,
+//     forceTLS: false,
+//     encrypted: true,
+//     disableStats: true,
+//     enabledTransports: ['ws', 'wss'],
+// });
+
+// laravelEcho.private(`orders.${orderId}`)
+//     .listen('OrderShipmentStatusUpdated', (e) => {
+//         console.log(e.order);
+//     });
 
 

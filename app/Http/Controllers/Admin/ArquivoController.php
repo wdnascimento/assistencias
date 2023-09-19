@@ -100,6 +100,8 @@ class ArquivoController extends Controller
                'titulo' => 'Cadastrar'
            ]];
 
+
+
         $data = $this->arquivo->find($id);
         if( $data->importado == 0){
             // galerias
@@ -155,6 +157,7 @@ class ArquivoController extends Controller
                         foreach($map_fields as $column => $value){
                             switch($column){
                                 case "data_nascimento" :
+                                    dd(format_birthday_password($csv[$value]));
                                     $tmp_data["password"]= Hash::make(preg_replace('/[^0-9]/', '', $csv[$value]));
                                 break;
                                 case 'celular' :
@@ -188,12 +191,14 @@ class ArquivoController extends Controller
                 fclose($file_handle);
 
 
+            if(!$data->update(['importado' => 1])){
+                return redirect()->back()->withErrors(['Erro modificar status da importação.']);
+            }
 
+        }else{
+            return redirect()->back()->withErrors(['Arquivo já importado anteriormente.']);
+        }
 
-        }
-        if(!$data->update(['importado' => 1])){
-            return redirect()->back()->withErrors(['Erro modificar status da importação.']);
-        }
 
         return redirect()->route($this->params['main_route'].'.index');
     }

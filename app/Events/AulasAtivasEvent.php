@@ -20,7 +20,8 @@ class AulasAtivasEvent implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        $data = Aula::ativas();
+        $aula = new Aula();
+        $data = $aula->ativas();
         return [ 'data' =>  $data] ;
     }
 
