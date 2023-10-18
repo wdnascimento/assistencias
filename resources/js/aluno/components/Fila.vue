@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <h5  v-if="(userSenha(this.fila) == true)" class="py-2 bg-light">
-            <button @click.once="pegarSenha(aula_id)" type="button" class="btn btn-dark">PEGAR SENHA</button>
+            <button @click="pegarSenha(aula_id)" type="button" class="btn btn-dark">PEGAR SENHA</button>
         </h5>
         <div v-else>
             <h5 class="py-2 bg-secondary">
@@ -132,6 +132,16 @@ export default {
                         aula_id: id,
                     }
                 )
+                .then(response => {
+                    if(response.status == 208){
+                        this.$toast.open({
+                            message: response.data.message,
+                            type: 'warning',
+                        // all of other options may go here
+                        });
+                    }
+
+                })
                 .catch(error => {
                     if(error.response.status == 401){
                         window.location.href= process.env.MIX_APP_URL;
@@ -142,7 +152,6 @@ export default {
                         // all of other options may go here
                         });
                     }
-
                 })
 
         },
@@ -156,6 +165,12 @@ export default {
             .catch(error => {
                 if(error.response.status == 401){
                     window.location.href= process.env.MIX_APP_URL;
+                }else if(error.response.status == 422){
+                        this.$toast.open({
+                            message: error.response.data.message,
+                            type: 'error',
+                        // all of other options may go here
+                        });
                 }else{
                     this.$toast.open({
                         message: error.response.data.message,

@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'turma_id' => 1,
             'ano' => 2023,
             'name' => $this->faker->name,
-            'numero' => $this->faker->randomNumber(6),
+            'numero' => $this->faker->randomNumber(8),
             'password' => '$2y$10$RNwjjqQzaghLpL0.tFzLi.wZFlWsditYPVF5NIQz1t0qHG2a/ID8S', // 25041982
             'celular' => $this->faker->randomNumber(9),
             'cabine' => $this->faker->numberBetween(1,99),

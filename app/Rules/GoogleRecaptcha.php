@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Http;
 
 class GoogleRecaptcha implements Rule
@@ -25,11 +26,11 @@ class GoogleRecaptcha implements Rule
     private function validateRecaptcha($value) : bool
     {
         $value = [
-            'secret' => env('GOOGLE_RECAPTCHA_SECRET_KEY'),
+            'secret' => env('GOOGLE_RECAPTCHA_SECRET_KEY','6LfA5egnAAAAAHU0LRiNsOJVxJXJOX6ma5qGzNsj'),
             'response' => $value
         ];
         $response = Http::asForm()->post(
-            env('GOOGLE_RECAPTCHA_URL'),$value
+            env('GOOGLE_RECAPTCHA_URL', 'https://www.google.com/recaptcha/api/siteverify') ,$value
 
         );
         $body = json_decode((string)$response->getBody());

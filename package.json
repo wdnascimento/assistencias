@@ -25,7 +25,9 @@
         "vue-template-compiler": "^2.7.14"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.4.2",
         "bootstrap-vue": "^2.23.1",
+        "font-awesome": "^4.7.0",
         "jquery": "^3.7.0",
         "jquery-mask-plugin": "^1.14.16",
         "popper.js": "^1.16.1",

@@ -17,7 +17,7 @@
                             <h3 class="card-title">{{$params['subtitulo']}}</h3>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="{{ route($params['main_route'].'.create')}}" class="btn btn-primary btn-xs"><span class="fas fa-plus"></span> Novo Cadastro</a>
+                            <a href="{{ route('professor.atendimento.index')}}" class="btn btn-primary btn-xs"><span class="fas fa-plus"></span> Novo Cadastro</a>
                         </div>
                     </div>
 
@@ -51,8 +51,8 @@
                             <tbody>
                                 @foreach ($data as $item)
                                 <tr>
-                                    <td>{{ $item['id'] . \Carbon\Carbon::parse($item['inicio'])->format('d/m/Y')}}</td>
-                                    <td>{{  $item['sala']['titulo']}}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item['inicio'])->format('d/m/Y')}}</td>
+                                    <td>{{ $item['sala']['titulo']}}</td>
                                     <td>{{ $item['disciplina']['titulo']}}</td>
                                     <td>{{ \Carbon\Carbon::parse($item['inicio'])->format('H:i')}}</td>
                                     <td>@if($item['fim']){{ \Carbon\Carbon::parse($item['fim'])->format('H:i')}}@else Não Finalizado @endif</td>

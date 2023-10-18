@@ -51,7 +51,7 @@ class LoginController extends Controller
 
         $credentials = $request->only('numero', 'password');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->remember)) {
             return redirect()->intended(route('aluno.home'));
         }
         return redirect()->back()->withErrors(['auth' => 'Usuário ou senha não conferem']);

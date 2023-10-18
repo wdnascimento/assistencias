@@ -26,8 +26,8 @@ class AlunoController extends Controller
         }else{
             return response()->json([
                 'message'   => 'Erro ao Retirar Senha',
-                'errors'    => 'Erro ao Retirar Senha'
-            ], 422);
+                'errors'    => 'Erro ao Retirar Senha' ,
+            ], 208);
         }
     }
 
@@ -42,7 +42,7 @@ class AlunoController extends Controller
             return response()->json([
                 'message'   => 'Erro ao Desistir Senha',
                 'errors'    => 'Erro ao Desistir Senha'
-            ], 422);
+            ], 208);
         }
     }
 }
