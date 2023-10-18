@@ -25,12 +25,14 @@ class GoogleRecaptcha implements Rule
 
     private function validateRecaptcha($value) : bool
     {
+        $GOOGLE_RECAPTCHA_URL = env('GOOGLE_RECAPTCHA_URL','https://www.google.com/recaptcha/api/siteverify');
+        $GOOGLE_RECAPTCHA_SECRET_KEY = env('GOOGLE_RECAPTCHA_SECRET_KEY','6LfA5egnAAAAAHU0LRiNsOJVxJXJOX6ma5qGzNsj');
         $value = [
-            'secret' => env('GOOGLE_RECAPTCHA_SECRET_KEY','6LfA5egnAAAAAHU0LRiNsOJVxJXJOX6ma5qGzNsj'),
+            'secret' => $GOOGLE_RECAPTCHA_SECRET_KEY,
             'response' => $value
         ];
         $response = Http::asForm()->post(
-            env('GOOGLE_RECAPTCHA_URL', 'https://www.google.com/recaptcha/api/siteverify') ,$value
+            $GOOGLE_RECAPTCHA_URL ,$value
 
         );
         $body = json_decode((string)$response->getBody());
