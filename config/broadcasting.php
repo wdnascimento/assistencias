@@ -66,8 +66,9 @@ return [
 
         'ably' => [
             'driver' => 'ably',
-            'key' => env('MIX_ABLY_PUBLIC_KEY'),
-
+            'key' => env('ABLY_KEY'),
+            'token_expiry' => env('ABLY_TOKEN_EXPIRY', 1800),
+            'heartbeats'=> false
         ],
 
         'redis' => [

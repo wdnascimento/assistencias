@@ -7,7 +7,6 @@
     <section class="content p-t-0"  id="app" >
         <div class="row">
             <painel sala_id="1" titulo="Mesa 01" root="{{ url('') }}"></painel>
-            <painel sala_id="2" titulo="Mesa 02" root="{{ url('') }}"></painel>
         </div>
     </section>
 @stop

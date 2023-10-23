@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
@@ -19,22 +19,12 @@ class MessageSent implements ShouldBroadcast
     public $user;
     public $message;
 
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
     public function __construct(User $users, Message $messages)
     {
         $this->user = $users;
         $this->message = $messages;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
     public function broadcastOn()
     {
         return new Channel('chat');

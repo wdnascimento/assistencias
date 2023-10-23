@@ -1,14 +1,14 @@
 <template>
     <div class="">
         <h5  v-if="(userSenha(this.fila) == true)" class="py-2 bg-light">
-            <button @click="pegarSenha(aula_id)" type="button" class="btn btn-dark">PEGAR SENHA</button>
+            <button @click="pegarSenha(aula_id)" id="btn_pegar_senha" type="button" class="btn btn-dark">PEGAR SENHA</button>
         </h5>
         <div v-else>
             <h5 class="py-2 bg-secondary">
                 <span class="mx-2">
                     Posição: <b>{{ this.senhaAluno }}º</b>
                 </span>
-                <button @click="desistirSenha(aula_id)" type="button" class="btn btn-dark">DESISTIR DA SENHA</button>
+                <button @click="desistirSenha(aula_id)" id="btn_desistir_senha" type="button" class="btn btn-dark">DESISTIR DA SENHA</button>
 
                 <button @click="verFila(aula_id)" :id="'btn_fila_'+aula_id" type="button" title="Próximos" class="btn btn-dark">
                     <i class="fa fa-arrow-down" aria-hidden="true"></i>
@@ -127,6 +127,7 @@ export default {
         },
 
         pegarSenha(id){
+            $("#btn_pegar_senha").attr('disabled','disabled');
             axios.post(process.env.MIX_APP_URL+'/api/pegarsenha',
                     {
                         aula_id: id,
@@ -153,7 +154,7 @@ export default {
                         });
                     }
                 })
-
+                // $("#btn_pegar_senha").removeAttr('disabled');
         },
 
         desistirSenha(id){

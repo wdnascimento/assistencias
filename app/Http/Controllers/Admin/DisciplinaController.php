@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Disciplina;
 use App\Http\Requests\Admin\Disciplina\DisciplinaRequest ;
+use App\Http\Requests\Admin\Disciplina\DisciplinaUpdateRequest;
 
 class DisciplinaController extends Controller
 {
-    
+
     public function __construct(Disciplina $disciplinas)
     {
         $this->disciplina = $disciplinas;
@@ -17,7 +18,7 @@ class DisciplinaController extends Controller
         // Default values
         $this->params['titulo']='Disciplina';
         $this->params['main_route']='admin.disciplina';
- 
+
     }
 
     public function index()
@@ -31,7 +32,7 @@ class DisciplinaController extends Controller
 
         $params = $this->params;
         $data = $this->disciplina->orderBy('titulo')->get();
-        
+
         return view('admin.disciplina.index',compact('params','data'));
     }
 
@@ -100,7 +101,7 @@ class DisciplinaController extends Controller
        return view('admin.disciplina.create',compact('params', 'data'));
     }
 
-    public function update(DisciplinaRequest $request, $id)
+    public function update(DisciplinaUpdateRequest $request, $id)
     {
         $data = $this->disciplina->find($id);
 

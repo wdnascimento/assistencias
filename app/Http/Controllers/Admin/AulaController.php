@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Event;
 
 class AulaController extends Controller
 {
+    private $params, $aula, $atendimento, $disciplina, $professor, $sala;
     public function __construct(Aula $aulas, Atendimento $atendimentos, Disciplina $disciplinas, Professor $professores, Sala $salas)
     {
         $this->aula = $aulas;

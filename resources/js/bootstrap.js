@@ -35,49 +35,44 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // PUSHER
 
-import Echo from 'laravel-echo';
+// import Echo from 'laravel-echo';
 
-window.Pusher = require('pusher-js');
+// window.Pusher = require('pusher-js');
 
-//  -------------------
-//  PUSHER CONFIG
-//  -------------------
-
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: true,
-    auth:{
-        headers: {
-            Accept: 'application/json',
-            Authorization: 'Bearer '+ process.env.MIX_PUSHER_APP_KEY,
-        },
-    },
-
-    authEndpoint: process.env.MIX_APP_URL+'/api/endpoint/auth'
-
-});
-
-//  -------------------
-//  SOKETI CONFIG
-//  -------------------
+// //  -------------------
+// //  PUSHER CONFIG
+// //  -------------------
 
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
 //     key: process.env.MIX_PUSHER_APP_KEY,
-//     wsHost: process.env.MIX_PUSHER_HOST,
-//     wsPort: process.env.MIX_PUSHER_PORT,
-//     wssPort: process.env.MIX_PUSHER_PORT,
-//     forceTLS: false,
-//     encrypted: true,
-//     disableStats: true,
-//     enabledTransports: ['ws', 'wss'],
+//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+//     forceTLS: true,
+//     auth:{
+//         headers: {
+//             Accept: 'application/json',
+//             Authorization: 'Bearer '+ process.env.MIX_PUSHER_APP_KEY,
+//         },
+//     },
+
+//     authEndpoint: process.env.MIX_APP_URL+'/api/endpoint/auth'
+
 // });
 
-// laravelEcho.private(`orders.${orderId}`)
-//     .listen('OrderShipmentStatusUpdated', (e) => {
-//         console.log(e.order);
-//     });
+import Echo from '@ably/laravel-echo';
+import * as Ably from 'ably';
+
+window.Ably = Ably;
+window.Echo = new Echo({
+    broadcaster: 'ably',
+    heartbeats: 'false'
+});
+
+window.Echo.connector.ably.connection.on(stateChange => {
+    if (stateChange.current === 'connected') {
+        console.log('connected to ably server');
+    }
+
+});
 
 

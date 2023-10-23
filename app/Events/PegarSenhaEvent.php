@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
@@ -14,11 +14,7 @@ class PegarSenhaEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $sala;
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
+
     public function __construct($sala)
     {
         $this->sala = $sala;
@@ -44,7 +40,10 @@ class PegarSenhaEvent implements ShouldBroadcast
                         ->whereIn('at.status',[0,1]);
                         })
                 ->leftJoin('users as us', 'us.id' , 'at.user_id')
-                ->select('au.id as aula_id', 'at.id as atendimento_id', 'au.status as status_aula', 'au.sala_id as sala_id' , 'at.status as status', DB::raw("SUBSTRING_INDEX(pr.name, ' ', 1) as professor"),  DB::raw("SUBSTRING_INDEX(us.name, ' ', 1) as nome"), 'us.name as nome_completo',  'us.numero as numero', 'us.cabine as cabine', 'di.titulo as titulo_disciplina')
+                ->select('au.id as aula_id', 'at.id as atendimento_id', 'au.status as status_aula', 'au.sala_id as sala_id'
+                        , 'at.status as status', DB::raw("SUBSTRING_INDEX(pr.name, ' ', 1) as professor")
+                        ,  DB::raw("SUBSTRING_INDEX(us.name, ' ', 1) as nome"), 'us.name as nome_completo'
+                        ,  'us.numero as numero', 'us.cabine as cabine', 'di.titulo as titulo_disciplina')
                 ->where('au.sala_id',$this->sala)
                 ->where('au.status',1)
                 ->orderBy('at.ordem')

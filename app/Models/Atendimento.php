@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\AulaSalaEvent;
 use App\Events\AulasAtivasEvent;
 use App\Events\FilasAtivasEvent;
+use App\Events\PainelSalaEvent;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Aula;
@@ -72,6 +73,10 @@ class Atendimento extends Model
                 Event::dispatch(new AulasAtivasEvent());
                 Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
+                // PAINEL
+                $sala = new Sala();
+                $sala = $sala->select('turma_id')->where('id',$aula['sala_id'])->first();
+                Event::dispatch(new PainelSalaEvent($sala['turma_id']));
                 $response['result'] = true;
                 return $response;
         } catch (Exception $e) {
@@ -131,6 +136,21 @@ class Atendimento extends Model
                             }
                         }
                         unset($data);
+
+                        // SELECIONA OS ALUNOS QUE SOLICITARAM SENHAS ATENDIMENTO
+                        $current = $this->select('id')->where('aula_id', $dataForm['aula_id'])->where('status',0)->get();
+                        foreach($current as $item){
+                            if($item){
+                                $data['status']='3';
+                                // ALTERA O STATUS PARA ATENDIDO
+                                if(! $this->find($item->id)->update($data)){
+                                    DB::rollback();
+                                    return false;
+                                }
+                            }
+                        }
+                        unset($data);
+
                         $data['status']= '0';
                         $data['fim'] =  date("Y-m-d H:i:s");
                         if(! $aula->find($dataForm['aula_id'])->update($data)){
@@ -229,22 +249,6 @@ class Atendimento extends Model
        }
    }
 
-    // Seta - quando ouver - os alunos para atendido se por ventura
-    // o professor esquecer de finalizar o atendimento
-
-    public function setAtendido(){
-        $atendimentos = $this->select('atendimentos.id as id')->join('aulas','aulas.id','=','atendimentos.aula_id')->where('atendimentos.status',1)->where('aulas.status',0)->get()->pluck('id')->toArray();
-
-        if(is_array($atendimentos) && sizeof($atendimentos)){
-            if($this->whereIn('id',$atendimentos)->update(array('status' => 3))){
-                return true;
-            }else{
-                return false;
-            }
-        }
-        return true;
-    }
-
     public function filaAula($aula_id){
 
         return $this ->select(   'atendimentos.id','atendimentos.ordem','atendimentos.user_id'
@@ -254,6 +258,21 @@ class Atendimento extends Model
                         ->where('status',0)
                         ->orderBy('ordem')
                         ->get();
+    }
+
+    public function painelAtendimentoSala($sala_id){
+
+        return $this->select('users.name as aluno','users.numero as numero', 'users.cabine as cabine','atendimentos.ordem as senha'
+                            ,'professors.name as professor', 'disciplinas.titulo as disciplina', 'salas.titulo as sala')
+                    ->join('users','users.id', 'atendimentos.user_id')
+                    ->join('aulas','aulas.id', 'atendimentos.aula_id')
+                    ->join('professors','professors.id', 'aulas.professor_id')
+                    ->join('disciplinas','disciplinas.id', 'aulas.disciplina_id')
+                    ->join('salas','salas.id', 'aulas.sala_id')
+                    ->where('salas.turma_id',$sala_id)
+                    ->orderBy('hora_atendimento','desc')
+                    ->limit(10)
+                    ->get();
     }
 
 }

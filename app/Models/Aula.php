@@ -77,6 +77,15 @@ class Aula extends Model
     public function atendidos(){
         return $this->hasMany(Atendimento::class)->whereIn('status',[1,2]);
     }
+    public function naoAtendidos(){
+        return $this->hasMany(Atendimento::class)->where('status',[0,3]);
+    }
+    public function senhas(){
+        return $this->hasMany(Atendimento::class)->withTrashed();
+    }
+    public function desistentes(){
+        return $this->hasMany(Atendimento::class)->where('status',0)->withTrashed();
+    }
 
     public function emAtendimento(){
         return $this->hasMany(Atendimento::class)
@@ -106,11 +115,15 @@ class Aula extends Model
         // data [disciplina_id, sala_id, professor_id]
        try {
             DB::beginTransaction();
-            // PROCURA AULAS ATIVA NESTA SALA
+            // PROCURA AULAS ATIVA NESTA SALA OU PARA O PROFESSOR
             $sala = $this->select('id')->where('sala_id',$data['sala_id'])->where('status',1)->get()->pluck('id')->toArray();
             $professor = $this->select('id')->where('professor_id',$data['professor_id'])->where('status',1)->get()->pluck('id')->toArray();
+
             if($sala != null || $professor != null){
-                if($this->whereIn('id',array_merge($sala,$professor))->update(array('status' => 0))){
+                $tmp = [];
+                $tmp['status'] = 0 ;
+                $tmp['fim'] = date("Y-m-d H:i:s");
+                if($this->whereIn('id',array_merge($sala,$professor))->update($tmp)){
                     if($this->create($data)){
                         DB::commit();
                         Event::dispatch(new AulasAtivasEvent());

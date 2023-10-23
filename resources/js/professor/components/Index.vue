@@ -272,72 +272,44 @@ export default {
                     this.$store.commit('setAulas',e.data) ;
                 }
             );
+            window.Echo.channel('painelsala.'+1)
+                .listen('.getPainelSala', (e) => {
+                    console.log(e);
+                    // this.$store.commit('setAtendimentos',e.data) ;
+            });
         },
 
         sendSMS(data){
             if(data.aluno.send_sms == 1 && data.aluno.celular != ''){
 
+                const sms_data = {
+                    id: '1',
+                    phone: '42999812349',
+                    message: 'Bora!! '+data.aluno.name+'. Chegou sua vez '+ data.aula.sala.titulo +' - Professor: ' +data.aula.professor.name +' Disciplina: '+ data.aula.disciplina.titulo,
 
+                }
 
-                // axios.post('https://api.plataformadesms.com.br/v2/message/single',
-                //     {
-                //         json: true,
-                //         body : sms_data,
-                //         headers: {
-                //             'Content-Type': 'application/json',
-                //             'Accept' : 'application/json',
-                //             'Cache-Control' : 'no-cache',
-                //             'Key': 'RQ96HSnCByXeddf',
-                //             // 'Key': process.env.MIX_YOUR_API_TOKEN,
-                //             'crossDomain': true,
-                //             'Access-Control-Allow-Origin': '*',
-                //         },
+                // const options = {
+                //     method: 'POST',
+                //     url: 'https://api.plataformadesms.com.br/v2/message/single',
+                //     headers: {
+                //         Key: 'RQ96HSnCByXeddf',
+                //         'Content-Type': 'application/json',
+                //     },
+                //     data: sms_data, // Usamos 'data' para passar os dados no Axios
+                //     };
 
-                // })
-                // .then((response) => {
-
-                //     console.log('Response:', response);
-                // })
-                // .catch((error) => {
-                //     console.log('Error:', error);
+                //     axios(options)
+                //     .then((response) => {
+                //         console.log(response.data);
+                //     })
+                //     .catch((error) => {
+                //         if (error.response) {
+                //         console.error('Erro de resposta:', error.response.data);
+                //         } else {
+                //         console.error('Erro na requisição:', error.message);
+                //         }
                 // });
-
-
-                // -------------------------------------
-                // ---              ZENVIA           ---
-                // -------------------------------------
-
-                axios.post('https://api.zenvia.com/v2/channels/sms/messages',
-                    {
-                            from: 'pear-opera',
-                            to:    '5542999256361',
-                            contents: [{
-                                type: 'text',
-                                text: 'Bora!! '+data.aluno.name+'. Chegou sua vez '+ data.aula.sala.titulo +' - Professor: ' +data.aula.professor.name +' Disciplina: '+ data.aula.disciplina.titulo,
-                            },
-                            {
-                                type: 'text',
-                                text: 'Menhor não demorar',
-                            }],
-                    }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept' : 'application/json',
-                        'Cache-Control' : 'no-cache',
-                        'X-API-TOKEN': process.env.MIX_YOUR_API_TOKEN,
-                        'crossDomain': true,
-                        'Access-Control-Allow-Origin': '*',
-                    },
-
-                })
-                .then((response) => {
-
-                    console.log('Response:', response);
-                })
-                .catch((error) => {
-                    console.log('Error:', error);
-                });
-
             }
 
         }
@@ -346,154 +318,6 @@ export default {
     mounted(){
         this.carregarAulas();
         this.listenChannel();
-
-            const sms_data = {
-                    id: '1',
-                    phone: '42999812349',
-                    message: 'Aqui vai a mensagem'
-                }
-
-
-            const options = {
-            method: 'POST',
-            url: 'https://api.plataformadesms.com.br/v2/message/single',
-            headers: {
-                Key: 'RQ96HSnCByXeddf',
-                'Content-Type': 'application/json',
-            },
-            data: sms_data, // Usamos 'data' para passar os dados no Axios
-            };
-
-            axios(options)
-            .then((response) => {
-                console.log(response.data);
-            })
-            .catch((error) => {
-                if (error.response) {
-                console.error('Erro de resposta:', error.response.data);
-                } else {
-                console.error('Erro na requisição:', error.message);
-                }
-            });
-
-
-        // axios.patch('https://api.zenvia.com/v2/contacts/ab467242-f929-4d11-8cd6-2050ffa2a27f',
-        //     {
-        //         "listIds": [
-        //             "223150c0-2e44-4b83-bb02-fd03f2a96989",
-        //             "e1e19e07-0006-48d4-870e-b407da0fd74e"
-        //         ]
-        //     }, {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Accept' : 'application/json',
-        //             'Cache-Control' : 'no-cache',
-        //             'X-API-TOKEN': process.env.MIX_YOUR_API_TOKEN,
-        //             'crossDomain': true,
-        //             'Access-Control-Allow-Origin': '*',
-        //             },
-
-        //     })
-        // .then((response) => {
-
-        //     console.log('Response:', response);
-        // })
-        // .catch((error) => {
-        //     console.log('Error:', error);
-        // });
-
-        // // axios.post('https://api.zenvia.com/v2/contact-lists',
-        // //     //e1e19e07-0006-48d4-870e-b407da0fd74e
-        // //     {
-        // //         "name": "sms_list"
-        // //     }, {
-        // //         headers: {
-        // //             'Content-Type': 'application/json',
-        // //             'Accept' : 'application/json',
-        // //             'Cache-Control' : 'no-cache',
-        // //             'X-API-TOKEN': process.env.MIX_YOUR_API_TOKEN,
-        // //             'crossDomain': true,
-        // //             'Access-Control-Allow-Origin': '*',
-        // //             },
-
-        // //     })
-        // // .then((response) => {
-
-        // //     console.log('Response:', response);
-        // // })
-        // // .catch((error) => {
-        // //     console.log('Error:', error);
-        // // });
-
-        // axios.get('https://api.zenvia.com/v2/contacts',{
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Accept' : 'application/json',
-        //         'Cache-Control' : 'no-cache',
-        //         'X-API-TOKEN': process.env.MIX_YOUR_API_TOKEN,
-        //         'crossDomain': true,
-        //         'Access-Control-Allow-Origin': '*',
-        //     },
-
-        // })
-        // .then((response) => {
-
-        //     console.log('Response: LIST CONTACT', response);
-        // })
-        // .catch((error) => {
-        //     console.log('Error: LIST CONTACT', error);
-        // });
-
-        // axios.get('https://api.zenvia.com/v2/contact-lists',{
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Accept' : 'application/json',
-        //         'Cache-Control' : 'no-cache',
-        //         'X-API-TOKEN': process.env.MIX_YOUR_API_TOKEN,
-        //         'crossDomain': true,
-        //         'Access-Control-Allow-Origin': '*',
-        //     },
-
-        // })
-        // .then((response) => {
-
-        //     console.log('Response: LIST CONTACT', response);
-        // })
-        // .catch((error) => {
-        //     console.log('Error: LIST CONTACT', error);
-        // });
-
-        // axios.post('https://api.zenvia.com/v2/channels/sms/messages',
-        //             {
-        //                     from: 'pear-opera',
-        //                     to:    '5542984249840',
-        //                     contents: [{
-        //                         type: 'text',
-        //                         text: 'Bora!!  Chegou sua vez - Professor:  Disciplina: ',
-        //                     },
-        //                     {
-        //                         type: 'text',
-        //                         text: 'Menhor não demorar',
-        //                     }],
-        //             }, {
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'Accept' : 'application/json',
-        //                 'Cache-Control' : 'no-cache',
-        //                 'X-API-TOKEN': process.env.MIX_YOUR_API_TOKEN,
-        //                 'crossDomain': true,
-        //                 'Access-Control-Allow-Origin': '*',
-        //             },
-
-        //         })
-        //         .then((response) => {
-
-        //             console.log('Response:', response);
-        //         })
-        //         .catch((error) => {
-        //             console.log('Error:', error);
-        //         });
-
     }
 }
 </script>

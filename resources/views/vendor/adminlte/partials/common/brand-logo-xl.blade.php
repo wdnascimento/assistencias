@@ -1,6 +1,10 @@
 @inject('layoutHelper', 'JeroenNoten\LaravelAdminLte\Helpers\LayoutHelper')
 
-@php( $dashboard_url = View::getSection('dashboard_url') ?? config('adminlte.dashboard_url.admin', 'home') )
+@if(Auth::guard('professor')->check())
+    @php( $dashboard_url = View::getSection('dashboard_url') ?? config('adminlte.dashboard_url.professor', 'home') )
+@elseif(Auth::guard('admin')->check())
+    @php( $dashboard_url = View::getSection('dashboard_url') ?? config('adminlte.dashboard_url.admin', 'home') )
+@endif
 
 @if (config('adminlte.use_route_url', false))
     @php( $dashboard_url = $dashboard_url ? route($dashboard_url) : '' )

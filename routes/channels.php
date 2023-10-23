@@ -2,6 +2,7 @@
 
 use App\Events\AulaSalaEvent;
 use App\Events\FilasAtivasEvent;
+use App\Events\PainelSalaEvent;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -22,6 +23,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('filaaula.{id}', FilasAtivasEvent::class);
 Broadcast::channel('aulasala.{id}', AulaSalaEvent::class);
+Broadcast::channel('painelsala.{id}', PainelSalaEvent::class);
 
 
 

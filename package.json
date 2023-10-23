@@ -25,7 +25,9 @@
         "vue-template-compiler": "^2.7.14"
     },
     "dependencies": {
+        "@ably/laravel-echo": "^1.0.3",
         "@fortawesome/fontawesome-free": "^6.4.2",
+        "ably": "^1.2.45",
         "bootstrap-vue": "^2.23.1",
         "font-awesome": "^4.7.0",
         "jquery": "^3.7.0",

@@ -99,7 +99,12 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::get('home', [IndexController::class,'index'])->name('admin.dashboard');
 
     // Atendimento
+    // Route::get('atendimento', [AdminAtendimentoController::class,'index'])->name('admin.atendimento.index');
+
     Route::get('atendimento', [AdminAtendimentoController::class,'index'])->name('admin.atendimento.index');
+    Route::get('atendimento/unidade/{unidade_id}', [AdminAtendimentoController::class,'unidade'])->name('admin.atendimento.unidade');
+    Route::get('atendimento/unidade/{unidade_id}/turma/{turma_id}', [AdminAtendimentoController::class,'turma'])->name('admin.atendimento.turma');
+    Route::get('atendimento/unidade/{unidade_id}/turma/{turma_id}/salas/{sala_id}', [AdminAtendimentoController::class,'salas'])->name('admin.atendimento.sala');
 
     // CRUDS
 
@@ -144,7 +149,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     //Aula
     Route::get('aula', [AdminAulaController::class,'index'])->name('admin.aula.index');
     Route::get('aula/create', [AdminAulaController::class,'create'])->name('admin.aula.create');
-    Route::post('aula/store', [AdminAulaController::class,'store'])->name('admin.aula.store');
+    // Route::post('aula/store', [AdminAulaController::class,'store'])->name('admin.aula.store');
     Route::post('aula/ativar/{id}', [AdminAulaController::class,'ativar'])->name('admin.aula.ativar');
     Route::post('aula/desativar/{id}', [AdminAulaController::class,'desativar'])->name('admin.aula.desativar');
 
@@ -189,6 +194,10 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::post('unidade/desativar/{id}', [UnidadeController::class,'desativar'])->name('admin.unidade.desativar');
 });
 
+Route::get('test', function () {
+    event(new App\Events\PainelSalaEvent(1));
+    return "Event has been sent!";
+});
 
 // Auth::routes();
 

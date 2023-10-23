@@ -14,21 +14,12 @@ class ListarSalasAtivasEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private $sala;
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
+
     public function __construct()
     {
         $this->sala = new Sala();
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
     public function broadcastOn()
     {
         return new Channel('salas');

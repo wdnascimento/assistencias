@@ -45,18 +45,28 @@
 
                                 <th>Início</th>
                                 <th>Fim</th>
-                                <th>Senhas / Atendidos</th>
+                                <th class="text-center">
+                                   <span class="px-1" data-toggle="tooltip" data-placement="top" title="Senhas">S</span> -
+                                   <span class="px-1" data-toggle="tooltip" data-placement="top" title="Atendidos">A</span> -
+                                   <span class="px-1" data-toggle="tooltip" data-placement="top" title="Não Atendidos">NA</span> -
+                                   <span class="px-1" data-toggle="tooltip" data-placement="top" title="Desistentes">D</span>
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data as $item)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($item['inicio'])->format('d/m/Y')}}</td>
+                                    <td>{{ $item->id}} - {{ \Carbon\Carbon::parse($item['inicio'])->format('d/m/Y')}}</td>
                                     <td>{{ $item['sala']['titulo']}}</td>
                                     <td>{{ $item['disciplina']['titulo']}}</td>
                                     <td>{{ \Carbon\Carbon::parse($item['inicio'])->format('H:i')}}</td>
                                     <td>@if($item['fim']){{ \Carbon\Carbon::parse($item['fim'])->format('H:i')}}@else Não Finalizado @endif</td>
-                                    <td>{{ $item->atendimentos->count() }} / {{ $item->atendidos->count() }}  </td>
+                                    <td class="text-center">
+                                        <span class="px-1" data-toggle="tooltip" data-placement="top" title="Senhas">{{ $item->senhas->count() }}</span> -
+                                        <span class="px-1" data-toggle="tooltip" data-placement="top" title="Atendidos">{{ $item->atendidos->count() }}</span> -
+                                        <span class="px-1" data-toggle="tooltip" data-placement="top" title="Não Atendidos">{{ $item->naoAtendidos->count() }}</span> -
+                                        <span class="px-1" data-toggle="tooltip" data-placement="top" title="Desistentes">{{ $item->desistentes->count() }}</span>
+                                    </td>
 
 
                                 </tr>
@@ -90,5 +100,10 @@
 @stop
 
 @section('js')
-
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').css("cursor","pointer")
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 @stop
