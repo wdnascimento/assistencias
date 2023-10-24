@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div v-else class=" col-12 p-3">
-                        <div class="bg-danger flex-column rounded align-items-center">
+                        <div class="bg-success flex-column rounded align-items-center">
                             <div class="header border-bottom border-light w-100">
                                 <h3 class="text-center py-2 ">Aula Ativa</h3>
                             </div>
@@ -77,7 +77,6 @@
 
 </template>
 <script>
-import axios from 'axios';
 export default {
     props: [
         'user_id',
@@ -280,36 +279,43 @@ export default {
         },
 
         sendSMS(data){
-            if(data.aluno.send_sms == 1 && data.aluno.celular != ''){
+
+            if(data.aluno.send_sms == 1 && data.aluno.celular != '' && data.aluno.celular.replace(/\D/g,'').length == 11 ){
+                var phone = data.aluno.celular.replace(/\D/g,'');
+                var aluno = data.aluno.name.split(" ")[0];
+                var professor = data.aula.professor.name.split(" ")[0];
+                var message= 'Olá '+aluno+'. Chegou sua vez '+ data.aula.sala.titulo +' - Professor: ' +professor+', Disciplina: '+ data.aula.disciplina.titulo;
 
                 const sms_data = {
                     id: '1',
-                    phone: '42999812349',
-                    message: 'Bora!! '+data.aluno.name+'. Chegou sua vez '+ data.aula.sala.titulo +' - Professor: ' +data.aula.professor.name +' Disciplina: '+ data.aula.disciplina.titulo,
+                    phone: phone,
+                    message: message,
 
                 }
 
-                // const options = {
-                //     method: 'POST',
-                //     url: 'https://api.plataformadesms.com.br/v2/message/single',
-                //     headers: {
-                //         Key: 'RQ96HSnCByXeddf',
-                //         'Content-Type': 'application/json',
-                //     },
-                //     data: sms_data, // Usamos 'data' para passar os dados no Axios
-                //     };
 
-                //     axios(options)
-                //     .then((response) => {
-                //         console.log(response.data);
-                //     })
-                //     .catch((error) => {
-                //         if (error.response) {
-                //         console.error('Erro de resposta:', error.response.data);
-                //         } else {
-                //         console.error('Erro na requisição:', error.message);
-                //         }
-                // });
+                const options = {
+                    method: 'POST',
+                    url: 'https://api.plataformadesms.com.br/v2/message/single',
+                    headers: {
+                        Key: 'RQ96HSnCByXeddf',
+                        'Content-Type': 'application/json',
+                    },
+                    data: sms_data, // Usamos 'data' para passar os dados no Axios
+                };
+
+                axios(options)
+                        .then((response) => {
+                            // console.log(response.data);
+                            console.log("sms enviado");
+                        })
+                        .catch((error) => {
+                            if (error.response) {
+                            console.error('Erro de envio');
+                            } else {
+                            console.error('Erro na requisição');
+                            }
+                        });
             }
 
         }

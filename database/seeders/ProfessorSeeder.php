@@ -18,7 +18,7 @@ class ProfessorSeeder extends Seeder
         // id, name, email, password, remember_token, created_at, updated_at, deleted_at
 
         $table = new Professor();
-        $table->create(["name" => "ANDREIA CHRISTINA IGNACIO", "email" => "AIgnacio@cursopositivo.com.br", "password" => Hash::make("positivo@2024")]);
+        $table->create(["name" => "ANDREIA CHRISTINA IGNACIO", "email" => "aignacio@cursopositivo.com.br", "password" => Hash::make("positivo@2024")]);
         $table->create(["name" => "AURELIO ANTONIO LEAL", "email" => "aaleal@cursopositivo.com.br", "password" => Hash::make("positivo@2024")]);
         $table->create(["name" => "CEZAR LUIZ DE CARVALHO", "email" => "cezarc@cursopositivo.com.br", "password" => Hash::make("positivo@2024")]);
         $table->create(["name" => "CLAUDIA REGINA TEIXEIRA ROCHA", "email" => "claudiar@cursopositivo.com.br", "password" => Hash::make("positivo@2024")]);
