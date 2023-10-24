@@ -53,6 +53,13 @@
                                 ['id'=>'ano','class' =>'form-control'])}}
                     </div>
                     <div class="form-group">
+                        {{Form::label('turma_id', 'Turma')}}
+                        {{Form::select('turma_id',
+                                $preload['turma_id'],
+                                ((isset($data->turma_id)) ? $data->turma_id : null),
+                                ['id'=>'turma_id','class' =>'form-control'])}}
+                    </div>
+                    <div class="form-group">
                         {{Form::label('name', 'Nome')}}
                         {{Form::text('name',null,['class' => 'form-control', 'placeholder' => 'Nome'])}}
                     </div>
@@ -63,7 +70,7 @@
                     <div class="form-group text-left">
                         {{Form::label('send_sms', 'Enviar SMS?')}}
                         <br>
-                        {{Form::checkbox('send_sms',1,false)}}
+                        {{Form::checkbox('send_sms',1,((isset($data->send_sms)) ? $data->send_sms : null))}}
                     </div>
 
                     <div id="div_celular" class="form-group">

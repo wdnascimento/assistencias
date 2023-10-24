@@ -20,7 +20,14 @@
                             <a href="{{ route($params['main_route'].'.create')}}" class="btn btn-primary btn-xs"><span class="fas fa-plus"></span> Novo Cadastro</a>
                         </div>
                     </div>
-
+                    <div class="col-12 p-3">
+                        {{ Form::open(['route' => [$params['main_route'].'.index',((isset($preload['turma'])) ? $preload['turma'] : '')],'method' =>'GET']) }}
+                            {{Form::select('turma_id',
+                                $preload['turma_id'],
+                                ((isset($preload['turma'])) ? $preload['turma'] : null),
+                                ['id'=>'turma_id','class' =>'form-control'])}}
+                        {{ Form::close() }}
+                    </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
@@ -30,6 +37,7 @@
                             <thead>
                             <tr>
                                 <th>Ano</th>
+                                <th>Turma</th>
                                 <th>Número</th>
                                 <th>Nome</th>
                                 <th>Cabine / Celular</th>
@@ -40,6 +48,7 @@
                                 @foreach ($data as $item)
                                 <tr @if( $item['send_sms'] == '0' && $item['cabine'] == '0') class="table-warning" @endif title="Aluno sem ensalamento">
                                     <td>{{ $item['ano']}}</td>
+                                    <td>{{ $item->turma['titulo']}}</td>
                                     <td>{{ $item['numero']}}</td>
                                     <td>{{ $item['name']}}</td>
                                     @if($item['send_sms'] == '0')
@@ -82,5 +91,10 @@
 @stop
 
 @section('js')
-
+    <script>
+        $('#turma_id').on('change', function(){
+            main_route = "{{ route($params['main_route'].'.index') }}";
+            window.location.href= main_route+'/'+this.value;
+        });
+    </script>
 @stop

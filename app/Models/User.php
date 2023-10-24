@@ -80,4 +80,8 @@ class User extends Authenticatable
 
     }
 
+    public function turma() {
+        return $this->belongsTo(Turma::class);
+    }
+
 }

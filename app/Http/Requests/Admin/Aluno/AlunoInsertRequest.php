@@ -25,10 +25,13 @@ class AlunoInsertRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'numero' => 'required|unique:users,numero',
+            'numero' => 'required|size:8|unique:users,numero',
             'password' => 'required|size:8',
-            'cabine' => 'required',
             'ano' => 'required',
+
+            'turma_id' => 'required',
+            'celular' => 'required_if:send_sms,1|size:15',
+            'cabine' => 'required_if:send_sms,0',
         ];
     }
 
@@ -37,12 +40,17 @@ class AlunoInsertRequest extends FormRequest
         return [
             'name.required' =>'O campo :attribute é de preenchimento obrigatório!',
             'numero.required' =>'O campo :attribute é de preenchimento obrigatório!',
-
             'numero.unique' =>'O campo :attribute já está cadastrado',
-            'cabine.required' =>'O campo :attribute é de preenchimento obrigatório!',
+            'numero.size' =>'O campo :attribute deve ter :size caracteres respeitando o formato 00000000!',
+
             'password.required' =>'O campo :attribute é de preenchimento obrigatório!',
             'password.size' =>'O campo :attribute deve ter :size caracteres respeitando o formato (DDMMAAAA)!',
             'ano.required' =>'O campo :attribute é de preenchimento obrigatório!',
+
+            'turma_id.required' =>'O campo :attribute é de preenchimento obrigatório!',
+            'celular.required_if' =>'O campo :attribute é de preenchimento obrigatório!',
+            'celular.size' =>'O campo :attribute deve observar o formato (00) 00000-0000!',
+            'cabine.required_if' =>'O campo :attribute é de preenchimento obrigatório!',
 
         ];
     }
@@ -53,7 +61,11 @@ class AlunoInsertRequest extends FormRequest
             'name' => 'Nome',
             'numero' => 'Número',
             'password' => 'Senha',
+
             'cabine' => 'Cabine',
+            'celular' => 'Celular',
+            'turma_id' => 'Turma',
+
             'ano' => 'Ano',
         ];
     }

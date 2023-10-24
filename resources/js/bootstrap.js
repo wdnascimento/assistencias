@@ -65,14 +65,13 @@ import * as Ably from 'ably';
 window.Ably = Ably;
 window.Echo = new Echo({
     broadcaster: 'ably',
-    heartbeats: 'false'
+    // transportParams: { heartbeats: false }
 });
 
 window.Echo.connector.ably.connection.on(stateChange => {
     if (stateChange.current === 'connected') {
         console.log('connected to ably server');
     }
-
 });
 
 

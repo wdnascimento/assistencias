@@ -252,7 +252,8 @@ class Atendimento extends Model
     public function filaAula($aula_id){
 
         return $this ->select(   'atendimentos.id','atendimentos.ordem','atendimentos.user_id'
-                                    ,'atendimentos.status', 'users.name as nome')
+                                    ,'atendimentos.status',
+                                    DB::raw("(SUBSTRING_INDEX(users.name, ' ', 1)) as nome"))
                         ->join('users','users.id', 'atendimentos.user_id')
                         ->where('aula_id',$aula_id)
                         ->where('status',0)
@@ -262,8 +263,9 @@ class Atendimento extends Model
 
     public function painelAtendimentoSala($sala_id){
 
-        return $this->select('users.name as aluno','users.numero as numero', 'users.cabine as cabine','atendimentos.ordem as senha'
-                            ,'professors.name as professor', 'disciplinas.titulo as disciplina', 'salas.titulo as sala')
+        return $this->select(DB::raw("(SUBSTRING_INDEX(users.name, ' ', 1)) as aluno"),'users.numero as numero', 'users.cabine as cabine','atendimentos.ordem as senha'
+                                , DB::raw("(SUBSTRING_INDEX(professors.name, ' ', 1)) as professor")
+                                , 'disciplinas.titulo as disciplina', 'salas.titulo as sala')
                     ->join('users','users.id', 'atendimentos.user_id')
                     ->join('aulas','aulas.id', 'atendimentos.aula_id')
                     ->join('professors','professors.id', 'aulas.professor_id')

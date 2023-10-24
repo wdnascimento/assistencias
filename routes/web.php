@@ -20,6 +20,7 @@ use App\Http\Controllers\HomeController as ControllersHomeController;
 use App\Http\Controllers\Professor\AtendimentoController;
 use App\Http\Controllers\Professor\AulaController;
 use App\Http\Controllers\Professor\IndexController as ProfessorIndexController;
+use App\Http\Controllers\Professor\ProfessorController as ProfessorProfessorController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route as Route;
 
@@ -57,6 +58,11 @@ Route::group(['prefix' => 'professor', 'namespace' => 'Auth/Professor'], functio
 Route::group(['prefix' => 'professor','middleware' => 'auth:professor','namespace' => 'Professor'], function(){
     Route::get('/', [ProfessorIndexController::class,'index'])->name('professor.home');
     Route::get('home', [ProfessorIndexController::class,'index'])->name('professor.dashboard');
+
+     // Professor password
+    Route::get('trocarsenha', [ProfessorProfessorController::class,'showPassword'])->name('professor.senha.trocarsenha');
+    Route::put('updatepassword', [ProfessorProfessorController::class,'updatePassword'])->name('professor.senha.updatepassword');
+
 
     // Atendimento
     Route::get('atendimento', [AtendimentoController::class,'index'])->name('professor.atendimento.index');
@@ -136,7 +142,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::delete('administrador/destroy/{id}', [AdminController::class,'destroy'])->name('admin.administrador.destroy');
 
     //Aluno
-    Route::get('aluno', [AlunoController::class,'index'])->name('admin.aluno.index');
+    Route::get('aluno/index/{turma_id?}', [AlunoController::class,'index'])->name('admin.aluno.index');
     Route::get('aluno/create', [AlunoController::class,'create'])->name('admin.aluno.create');
     Route::post('aluno/store', [AlunoController::class,'store'])->name('admin.aluno.store');
     Route::get('aluno/edit/{id}', [AlunoController::class,'edit'])->name('admin.aluno.edit');

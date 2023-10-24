@@ -25,10 +25,13 @@ class AlunoEditarRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'numero' => 'required|unique:users,numero,'.$this->id,
+            'numero' => 'required|size:8|unique:users,numero,'.$this->id,
             'password_aluno' => 'size:8',
-            'cabine' => 'required',
+            'turma_id' => 'required',
+
             'ano' => 'required',
+            'celular' => 'required_if:send_sms,1|size:15',
+            'cabine' => 'required_if:send_sms,0',
         ];
     }
 
@@ -38,9 +41,16 @@ class AlunoEditarRequest extends FormRequest
             'name.required' =>'O campo :attribute é de preenchimento obrigatório!',
             'numero.required' =>'O campo :attribute é de preenchimento obrigatório!',
             'numero.unique' =>':attribute já cadastrado',
-            'cabine.required' =>'O campo :attribute é de preenchimento obrigatório!',
-            'password_aluno.size' =>'O campo :attribute deve ter :size caracteres respeitando o formato (DDMMAAAA)!',
+            'numero.size' =>'O campo :attribute deve ter :size caracteres respeitando o formato 00000000!',
+
             'ano.required' =>'O campo :attribute é de preenchimento obrigatório!',
+            'turma_id.required' =>'O campo :attribute é de preenchimento obrigatório!',
+
+            'celular.required_if' =>'O campo :attribute é de preenchimento obrigatório!',
+            'celular.size' =>'O campo :attribute deve observar o formato (00) 00000-0000!',
+            'cabine.required_if' =>'O campo :attribute é de preenchimento obrigatório!',
+
+            'password_aluno.size' =>'O campo :attribute deve ter :size caracteres respeitando o formato (DDMMAAAA)!',
         ];
     }
 
@@ -49,9 +59,13 @@ class AlunoEditarRequest extends FormRequest
         return [
             'name' => 'Nome',
             'numero' => 'Número',
-            'cabine' => 'Cabine',
-            'ano' => 'Ano',
             'password_aluno' => 'Senha',
+
+            'cabine' => 'Cabine',
+            'celular' => 'Celular',
+            'turma_id' => 'Turma',
+
+            'ano' => 'Ano',
         ];
     }
 }

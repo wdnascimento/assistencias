@@ -9,6 +9,7 @@ class Sala extends Model
 {
     use SoftDeletes;
     protected $fillable = ['turma_id','titulo', 'desc_turma'];
+    protected $appends  = ['desc_turma'];
 
     public function getDescTurmaAttribute(){
         $turma = new Turma();

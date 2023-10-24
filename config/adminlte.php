@@ -340,6 +340,12 @@ return [
             'label_color' => 'success', */
         ],
         [
+            'text'        => 'Trocar Senha',
+            'url'         => 'professor/trocarsenha',
+            'icon'        => 'fas fa-user',
+            'can'         => ['professores'],
+        ],
+        [
             'text'        => 'Início',
             'url'         => 'admin/home',
             'icon'        => 'fas fa-home',
@@ -398,7 +404,7 @@ return [
             'submenu' =>    [
                                 [
                                     'text'        => 'Controle',
-                                    'url'         => 'admin/aluno',
+                                    'url'         => 'admin/aluno/index',
                                     'icon'        => 'fas fa-user-cog',
                                     'can'         => ['administrador'],
                                 ],

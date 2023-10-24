@@ -9,13 +9,17 @@ use App\Models\User;
 use App\Models\TabelaCodes;
 use App\Http\Requests\Admin\Aluno\AlunoInsertRequest ;
 use App\Http\Requests\Admin\Aluno\AlunoEditarRequest ;
+use App\Models\Turma;
+use Illuminate\Support\Facades\DB;
 
 class AlunoController extends Controller
 {
+    private $aluno, $turma, $code, $params;
 
-    public function __construct(User $alunos, TabelaCodes $codes)
+    public function __construct(User $alunos, TabelaCodes $codes, Turma $turmas)
     {
         $this->aluno = $alunos;
+        $this->turma = $turmas;
 
         $this->code = $codes;
 
@@ -30,7 +34,7 @@ class AlunoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id=null)
     {
         // PARAMS DEFAULT
         $this->params['subtitulo']='Alunos Cadastrados';
@@ -40,9 +44,20 @@ class AlunoController extends Controller
         ];
 
         $params = $this->params;
-        $data = $this->aluno->paginate(20);
+        $preload['turma_id'] = $this->turma->getTurmas();
+        if($id === null){
+            $turma_id = array_key_first($preload['turma_id']->toArray());
+        }else{
+            $turma_id = intval($id);
+        }
+        if($turma_id){
+            $preload['turma']= $turma_id;
+            $data = $this->aluno->with('turma')->where('turma_id',$turma_id)->paginate(20);
+        }else{
+            $data = null;
+        }
 
-        return view('admin.aluno.index',compact('params','data'));
+        return view('admin.aluno.index',compact('params','data','preload'));
     }
 
     /**
@@ -65,6 +80,7 @@ class AlunoController extends Controller
            ]];
        $params = $this->params;
        $preload['ano'] = $this->code->where('pai',1)->orderBy('item')->get()->pluck('descricao','valor');
+       $preload['turma_id'] = $this->turma->getTurmas();
        return view('admin.aluno.create',compact('params','preload'));
     }
 
@@ -80,10 +96,10 @@ class AlunoController extends Controller
 
         $dataForm['password'] = Hash::make($dataForm['password']);
 
-
         $insert = $this->aluno->insertValidaCabine($dataForm);
+
         if($insert){
-            return redirect()->route($this->params['main_route'].'.index');
+            return redirect()->route($this->params['main_route'].'.index',$dataForm['turma_id']);
         }else{
             return redirect()->route($this->params['main_route'].'.create')->withErrors(['Falha ao fazer Inserir.']);
         }
@@ -134,6 +150,7 @@ class AlunoController extends Controller
            ]];
        $params = $this->params;
        $preload['ano'] = $this->code->where('pai',1)->orderBy('item')->get()->pluck('descricao','valor');
+       $preload['turma_id'] = $this->turma->getTurmas();
        $data = $this->aluno->find($id);
        return view('admin.aluno.create',compact('params', 'data','preload'));
     }
@@ -150,6 +167,7 @@ class AlunoController extends Controller
         $data = $this->aluno->find($id);
 
         $dataForm  = $request->all();
+        $dataForm['send_sms'] = (isset($dataForm['send_sms']) ? $dataForm['send_sms'] : 0);
 
         if(isset($dataForm['trocar_senha_aluno']) && $dataForm['trocar_senha_aluno'] == '1' && $dataForm['password_aluno'] != ''){
             $dataForm['password'] = Hash::make($dataForm['password_aluno']);
@@ -157,9 +175,8 @@ class AlunoController extends Controller
             unset($dataForm['password']);
         }
 
-
         if($data->updateValidaCabine($dataForm,$id)){
-            return redirect()->route($this->params['main_route'].'.index');
+            return redirect()->route($this->params['main_route'].'.index',$dataForm['turma_id']);
         }else{
             return redirect()->route($this->params['main_route'].'.create')->withErrors(['Falha ao editar.']);
         }
@@ -174,9 +191,10 @@ class AlunoController extends Controller
     public function destroy($id)
     {
         $data = $this->aluno->find($id);
-
+        // Pega a turma para redirecionar
+        $turma_id = $data['turma_id'];
         if($data->delete()){
-            return redirect()->route($this->params['main_route'].'.index');
+            return redirect()->route($this->params['main_route'].'.index',$turma_id);
         }else{
             return redirect()->route($this->params['main_route'].'.create')->withErrors(['Falha ao deletar.']);
         }
