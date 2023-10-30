@@ -20,14 +20,22 @@
                             <a href="{{ route($params['main_route'].'.create')}}" class="btn btn-primary btn-xs"><span class="fas fa-plus"></span> Novo Cadastro</a>
                         </div>
                     </div>
-                    <div class="col-12 p-3">
-                        {{ Form::open(['route' => [$params['main_route'].'.index',((isset($preload['turma'])) ? $preload['turma'] : '')],'method' =>'GET']) }}
-                            {{Form::select('turma_id',
-                                $preload['turma_id'],
-                                ((isset($preload['turma'])) ? $preload['turma'] : null),
-                                ['id'=>'turma_id','class' =>'form-control'])}}
-                        {{ Form::close() }}
+                    {{ Form::open(['route' => [$params['main_route'].'.index',((isset($preload['turma'])) ? $preload['turma'] : '')],'method' =>'GET', 'id' => 'form_filtro']) }}
+                    <div class="row">
+                        <div class="col-4 pt-3">
+                                {{Form::select('turma_id',
+                                    $preload['turma_id'],
+                                    ((isset($preload['turma'])) ? $preload['turma'] : null),
+                                    ['id'=>'turma_id','class' =>'form-control'])}}
+                        </div>
+                        <div class="col-4 pt-3">
+                            {{ Form::text('name',(isset($searchFields['name']) ? $searchFields['name'] : ''), ['class' => 'form-control', 'placeholder' => 'Nome'])}}
+                        </div>
+                        <div class="col-4 d-flex pt-3 ">
+                            {{ Form::submit('Buscar',['class'=>'btn btn-primary btn-md d-flex']) }}
+                        </div>
                     </div>
+                    {{ Form::close() }}
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
@@ -93,8 +101,7 @@
 @section('js')
     <script>
         $('#turma_id').on('change', function(){
-            main_route = "{{ route($params['main_route'].'.index') }}";
-            window.location.href= main_route+'/'+this.value;
+            $('#form_filtro').submit();
         });
     </script>
 @stop

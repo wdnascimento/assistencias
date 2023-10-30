@@ -52,15 +52,16 @@
         <main class="mt-3">
             @yield('content')
         </main>
-        <footer class="footer">
-            <!-- Copyright -->
-            <div class="container text-center text-black">
-                 © 2023 Copyright
-            </div>
-            <!-- Copyright -->
-        </footer>
+
 
     </body>
+    <footer class="footer">
+        <!-- Copyright -->
+        <div class="container text-center text-black">
+             © 2023 Copyright
+        </div>
+        <!-- Copyright -->
+    </footer>
 
 <script src="{{ asset('js/aluno/app.js') }}" ></script>
 <script src="{{ asset('plugin/jquery.mask.min.js') }}" ></script>

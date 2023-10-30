@@ -10,6 +10,7 @@ use App\Models\TabelaCodes;
 use App\Http\Requests\Admin\Aluno\AlunoInsertRequest ;
 use App\Http\Requests\Admin\Aluno\AlunoEditarRequest ;
 use App\Models\Turma;
+use Hamcrest\Arrays\IsArray;
 use Illuminate\Support\Facades\DB;
 
 class AlunoController extends Controller
@@ -34,30 +35,41 @@ class AlunoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id=null)
+    public function index(Request $request)
     {
         // PARAMS DEFAULT
         $this->params['subtitulo']='Alunos Cadastrados';
         $this->params['arvore'][0] = [
-                    'url' => 'admin/aluno',
+                    'url' => 'admin/aluno/index',
                     'titulo' => 'Alunos'
         ];
-
         $params = $this->params;
+        $searchFields = [];
+
+        // REQUEST
+        $turma =$request->only('turma_id');
+        $aluno = $request->only('name');
+        // dd($turma);
         $preload['turma_id'] = $this->turma->getTurmas();
-        if($id === null){
+
+        if(is_array($turma) && empty($turma)){
             $turma_id = array_key_first($preload['turma_id']->toArray());
         }else{
-            $turma_id = intval($id);
+            $turma_id = intval($turma['turma_id']);
         }
         if($turma_id){
             $preload['turma']= $turma_id;
-            $data = $this->aluno->with('turma')->where('turma_id',$turma_id)->paginate(20);
+            if(is_array($aluno) && (!empty($aluno))){
+                $data = $this->aluno->with('turma')->where('turma_id',$turma_id)->where('name','LIKE','%'.$aluno['name'].'%')->orderBy('name')->paginate(50);
+                $searchFields['name']= $aluno['name'] ;
+            }else{
+                $data = $this->aluno->with('turma')->where('turma_id',$turma_id)->orderBy('name')->paginate(50);
+            }
         }else{
             $data = null;
         }
 
-        return view('admin.aluno.index',compact('params','data','preload'));
+        return view('admin.aluno.index',compact('params','data','preload','searchFields'));
     }
 
     /**
@@ -71,7 +83,7 @@ class AlunoController extends Controller
         $this->params['subtitulo']='Cadastrar Aluno';
         $this->params['arvore']=[
            [
-               'url' => 'admin/aluno',
+               'url' => 'admin/aluno/index',
                'titulo' => 'Aluno'
            ],
            [
@@ -116,7 +128,7 @@ class AlunoController extends Controller
         $this->params['subtitulo']='Deletar Aluno';
         $this->params['arvore']=[
            [
-               'url' => 'admin/aluno',
+               'url' => 'admin/aluno/index',
                'titulo' => 'Aluno'
            ],
            [
@@ -141,7 +153,7 @@ class AlunoController extends Controller
         $this->params['subtitulo']='Editar Aluno';
         $this->params['arvore']=[
            [
-               'url' => 'admin/aluno',
+               'url' => 'admin/aluno/index',
                'titulo' => 'Aluno'
            ],
            [
