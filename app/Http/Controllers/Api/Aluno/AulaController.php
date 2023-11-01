@@ -7,10 +7,10 @@ use App\Models\Aula;
 
 class AulaController extends Controller
 {
-    public function ativas()
+    public function ativas($aula_id)
     {
         $aula = new Aula();
-        return $aula->ativas();
+        return $aula->ativas($aula_id);
     }
 
     public function aulasala($id)

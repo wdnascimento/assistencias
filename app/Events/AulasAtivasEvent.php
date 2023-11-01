@@ -13,15 +13,22 @@ class AulasAtivasEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $turma_id ;
+
+    public function __construct($id)
+    {
+        $this->turma_id = $id;
+    }
+
     public function broadcastOn()
     {
-        return new Channel('aulas');
+        return new Channel('aulas.'.$this->turma_id);
     }
 
     public function broadcastWith()
     {
         $aula = new Aula();
-        $data = $aula->ativas();
+        $data = $aula->ativas($this->turma_id);
         return [ 'data' =>  $data] ;
     }
 

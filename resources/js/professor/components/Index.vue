@@ -271,11 +271,11 @@ export default {
                     this.$store.commit('setAulas',e.data) ;
                 }
             );
-            window.Echo.channel('painelsala.'+1)
-                .listen('.getPainelSala', (e) => {
-                    console.log(e);
-                    // this.$store.commit('setAtendimentos',e.data) ;
-            });
+            // window.Echo.channel('painelsala.'+1)
+            //     .listen('.getPainelSala', (e) => {
+            //         //console.log(e);
+            //         // this.$store.commit('setAtendimentos',e.data) ;
+            // });
         },
 
         sendSMS(data){
@@ -305,17 +305,17 @@ export default {
                 };
 
                 axios(options)
-                        .then((response) => {
-                            // console.log(response.data);
-                            console.log("sms enviado");
-                        })
-                        .catch((error) => {
-                            if (error.response) {
-                            console.error('Erro de envio');
-                            } else {
-                            console.error('Erro na requisição');
-                            }
-                        });
+                    .then((response) => {
+                        // console.log(response.data);
+                        console.log("sms enviado");
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                        console.error('Erro de envio');
+                        } else {
+                        console.error('Erro na requisição');
+                        }
+                    });
             }
 
         }

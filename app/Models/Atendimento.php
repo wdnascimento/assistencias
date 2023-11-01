@@ -70,7 +70,7 @@ class Atendimento extends Model
                 DB::commit();
                 $aula = new Aula();
                 $aula = $aula->select('sala_id')->where('id',$dataForm['aula_id'])->first();
-                Event::dispatch(new AulasAtivasEvent());
+                Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($dataForm['aula_id'])));
                 Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
                 // PAINEL
@@ -105,8 +105,7 @@ class Atendimento extends Model
 
             $aula = new Aula();
             $aula = $aula->select('sala_id')->where('id',$dataForm['aula_id'])->first();
-
-            Event::dispatch(new AulasAtivasEvent());
+            Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($dataForm['aula_id'])));
             Event::dispatch(new AulaSalaEvent($aula['sala_id']));
             Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
             return true;
@@ -158,7 +157,7 @@ class Atendimento extends Model
                             return false;
                         }
                         DB::commit();
-                        Event::dispatch(new AulasAtivasEvent());
+                        Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($dataForm['aula_id'])));
                         Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                         Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
                         return true;
@@ -166,7 +165,7 @@ class Atendimento extends Model
                 }
                 DB::rollback();
 
-                Event::dispatch(new AulasAtivasEvent());
+                Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($dataForm['aula_id'])));
                 Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($dataForm['aula_id']));
                 return false;
@@ -188,7 +187,7 @@ class Atendimento extends Model
                     $data['ordem'] = $this->where('aula_id',$data['aula_id'])->withTrashed()->max('ordem') + 1;
                     if($this->create($data)){
                         DB::commit();
-                        Event::dispatch(new AulasAtivasEvent());
+                        Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
                         Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                         Event::dispatch(new FilasAtivasEvent($data['aula_id']));
                         return true;
@@ -196,13 +195,13 @@ class Atendimento extends Model
                 }
                 DB::rollback();
 
-                Event::dispatch(new AulasAtivasEvent());
+                Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
                 Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($data['aula_id']));
                 return false;
 
             }
-            Event::dispatch(new AulasAtivasEvent());
+            Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
             Event::dispatch(new FilasAtivasEvent($data['aula_id']));
             DB::rollback();
             return false;
@@ -230,7 +229,7 @@ class Atendimento extends Model
                 $aula = new Aula();
                 $aula =$aula->select('sala_id')->where('id',$data['aula_id'])->first();
                 // testa se a aula está ativa e pega a sala_id
-                Event::dispatch(new AulasAtivasEvent());
+                Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
                 Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($data['aula_id']));
                 return true;
@@ -238,7 +237,8 @@ class Atendimento extends Model
             $aula = new Aula();
             $aula =$aula->select('sala_id')->where('id',$data['aula_id'])->first();
             // testa se a aula está ativa e pega a sala_id
-            Event::dispatch(new AulasAtivasEvent());
+
+            Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
             Event::dispatch(new AulaSalaEvent($aula['sala_id']));
             Event::dispatch(new FilasAtivasEvent($data['aula_id']));
             return false;

@@ -33,7 +33,7 @@ import axios from 'axios'
 
 export default {
     props: [
-        'sala_id',
+        'turma_id',
         'root',
         'user_id'
     ],
@@ -70,7 +70,7 @@ export default {
             return (user_id == this.user_id) ? 'font-weight-bold text-light bg-dark' : '';
         },
         carregarAulas(){
-            axios.get(process.env.MIX_APP_URL+'/api/aulasativas',{ assinc : true})
+            axios.get(process.env.MIX_APP_URL+'/api/aulasativas/'+this.turma_id,{ assinc : true})
                 .then(response => {
                     this.$store.commit('setAulas',response.data) ;
                     this.listenChannel();
@@ -94,7 +94,7 @@ export default {
         },
 
         listenChannel(){
-            window.Echo.channel('aulas')
+            window.Echo.channel('aulas.'+this.turma_id)
                 .listen('.getAulasAtivas', (e) => {
                     this.$store.commit('setAulas',e.data) ;
                 });

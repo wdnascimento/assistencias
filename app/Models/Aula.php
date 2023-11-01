@@ -15,22 +15,31 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
+
+
 class Aula extends Model
 {
 
     protected $fillable = ['disciplina_id', 'professor_id', 'sala_id', 'sala' ,'disciplina', 'professor' , 'date', 'inicio','fim', 'status', 'created_by'];
 
 
+    public $turma_id;
     public function sala(){
         return $this->belongsTo(Sala::class);
     }
 
-    public function ativas(){
+    public function ativas($turma_id){
+        $this->turma_id = $turma_id;
         return Aula::select( 'aulas.id','salas.id as sala_id','professors.id as professor_id'
-                                    ,'salas.titulo as sala'
+                                    ,'salas.titulo as sala', 'salas.turma_id'
                                     ,DB::raw("(SUBSTRING_INDEX(professors.name, ' ', 1)) as professor")
                                     ,'disciplinas.titulo as disciplina' )
-                        ->join('salas','salas.id','aulas.sala_id')
+                        // ->join('salas','salas.id','aulas.sala_id')
+                        ->join('salas', function($join)
+                        {
+                            $join->on('salas.id', '=', 'aulas.sala_id');
+                            $join->where('salas.turma_id','=', $this->turma_id);
+                        })
                         ->join('professors','professors.id','aulas.professor_id')
                         ->join('disciplinas','disciplinas.id','aulas.disciplina_id')
                         ->where('aulas.status',1)
@@ -124,19 +133,21 @@ class Aula extends Model
                 $tmp['status'] = 0 ;
                 $tmp['fim'] = date("Y-m-d H:i:s");
                 if($this->whereIn('id',array_merge($sala,$professor))->update($tmp)){
-                    if($this->create($data)){
+                    if($aula = $this->create($data)){
                         DB::commit();
-                        Event::dispatch(new AulasAtivasEvent());
+                        $array = array_merge($sala,$professor);
+                        foreach($array as $v){
+                            Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($v)));
+                        }
+                        Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($aula->id)));
                         Event::dispatch(new AulaSalaEvent($data['sala_id']));
                         return true;
                     }
                 }
-
             }else{
-                if($this->create($data)){
-
+                if($aula = $this->create($data)){
                     DB::commit();
-                    Event::dispatch(new AulasAtivasEvent());
+                    Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($aula->id)));
                     Event::dispatch(new AulaSalaEvent($data['sala_id']));
                     return true;
                 }
@@ -149,6 +160,10 @@ class Aula extends Model
        return false;
    }
 
+   public function aulaTurma($id){
+        $tmp = $this->select('salas.turma_id as turma_id')->join('salas','salas.id','aulas.sala_id')->find($id)->toArray();
+        return  is_array($tmp) ? $tmp["turma_id"] : null;
+    }
 
 
 
