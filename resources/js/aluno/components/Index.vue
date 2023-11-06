@@ -2,13 +2,12 @@
     <div v-if="(Array.isArray(this.$store.getters.getAulas) && this.$store.getters.getAulas.length)" class="row">
         <div v-for="(items, index) in this.$store.getters.getAulas" :key="items.id" class="pt-2 col-12 col-md-6 col-lg-6 col-xl-6" >
             <div  id="icons-main" class="d-flex flex-column align-items-center">
-                <div class="p-2 center">
-                    <h4 class="w-100 center" >
-                        <i class="fa fa-book" aria-hidden="true"></i> {{ items.sala }}
-                        <span v-if="emAtendimento(index) == 'bg-success'" class="badge badge-light target-atendimento ml-3">Em Atendimento</span>
-                    </h4>
+                <div class="w-100 py-2 px-5 h4 d-flex justify-content-between">
+                        <p class="mb-0 align-self-start"><i class="fa-solid fa-book" aria-hidden="true"></i> {{ items.sala }}</p>
+                        <p v-if="emAtendimento(index)" class="mb-0 align-self-start">Alunos em Fila: {{ items.size_fila }}</p>
+                        <p v-else class="mb-0 align-self-start">Sem Fila</p>
                 </div>
-                <div id="body" :class="'w-100 m-0 flex-grow-1 ' + ((emAtendimento(index)) ? 'bg-success' : 'bg-danger' )">
+                <div id="body" :class="'w-100 m-0 flex-grow-1 ' + ((emAtendimento(index)) ? ((userIdEmAtendimento(index) == user_id) ? 'bg-green' : 'bg-yellow' ): 'bg-danger' ) ">
                     <h5 class="py-1">Disciplina: {{ items.disciplina }}</h5>
                     <h5  class="py-1">Prof(a).: {{ items.professor }}</h5>
                     <h5 v-if="emAtendimento(index)" class="py-2 bg-light text-dark">Aluno(a): {{ alunoEmAtendimento(index) }}</h5>
@@ -62,6 +61,14 @@ export default {
                     ? this.$store.getters.getAulas[idx].em_atendimento[0].nome
                     : '';
             }
+        },
+
+        userIdEmAtendimento: function () {
+            return idx => {
+                return  (Array.isArray(this.$store.getters.getAulas[idx].em_atendimento) && this.$store.getters.getAulas[idx].em_atendimento.length)
+                    ? this.$store.getters.getAulas[idx].em_atendimento[0].user_id
+                    : '';
+            }
         }
 
     },
@@ -111,5 +118,15 @@ export default {
 
     .target-atendimento{
         font-size: 10px;
+    }
+
+    .bg-yellow{
+        background: #ffd700 !important;
+        color:black !important;
+    }
+
+    .bg-green{
+        background: green !important;
+        color:black !important;
     }
 </style>

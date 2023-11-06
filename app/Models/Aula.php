@@ -33,8 +33,8 @@ class Aula extends Model
         return Aula::select( 'aulas.id','salas.id as sala_id','professors.id as professor_id'
                                     ,'salas.titulo as sala', 'salas.turma_id'
                                     ,DB::raw("(SUBSTRING_INDEX(professors.name, ' ', 1)) as professor")
+                                    ,DB::raw("(SELECT COUNT(id) FROM atendimentos WHERE atendimentos.status IN (0,1) AND atendimentos.aula_id = aulas.id ) as size_fila")
                                     ,'disciplinas.titulo as disciplina' )
-                        // ->join('salas','salas.id','aulas.sala_id')
                         ->join('salas', function($join)
                         {
                             $join->on('salas.id', '=', 'aulas.sala_id');
@@ -99,7 +99,8 @@ class Aula extends Model
     public function emAtendimento(){
         return $this->hasMany(Atendimento::class)
                     ->select( 'atendimentos.aula_id'
-                                , DB::raw("(SELECT CONCAT(u.numero, ' - ',SUBSTRING_INDEX(u.name, ' ', 1)) FROM users u WHERE u.id = atendimentos.user_id) as nome"))
+                                , 'atendimentos.user_id as user_id'
+                                , DB::raw("(SELECT CONCAT(SUBSTRING_INDEX(u.name, ' ', 2) ) FROM users u WHERE u.id = atendimentos.user_id) as nome"))
                     ->where('atendimentos.status',1);
     }
 
@@ -107,7 +108,7 @@ class Aula extends Model
         return $this->hasMany(Atendimento::class)
                     ->select(   'atendimentos.id','atendimentos.user_id','atendimentos.aula_id'
                                 ,'atendimentos.ordem','atendimentos.status'
-                                , DB::raw("(SELECT CONCAT(u.numero, ' - ',SUBSTRING_INDEX(u.name, ' ', 1)) FROM users u WHERE u.id = atendimentos.user_id) as nome"))
+                                , DB::raw("(SELECT CONCAT(SUBSTRING_INDEX(u.name, ' ', 2) ) FROM users u WHERE u.id = atendimentos.user_id) as nome"))
                     ->whereIn('atendimentos.status',[0,1])
                     ->orderBy('atendimentos.status','desc')
                     ->orderBy('atendimentos.ordem');

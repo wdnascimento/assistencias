@@ -284,7 +284,7 @@ export default {
                 var phone = data.aluno.celular.replace(/\D/g,'');
                 var aluno = data.aluno.name.split(" ")[0];
                 var professor = data.aula.professor.name.split(" ")[0];
-                var message= 'Olá '+aluno+'. Chegou sua vez '+ data.aula.sala.titulo +' - Professor: ' +professor+', Disciplina: '+ data.aula.disciplina.titulo;
+                var message= 'Olá, '+aluno+'. Chegou sua vez. '+ data.aula.sala.titulo +' - Professor: ' +professor+', Disciplina: '+ data.aula.disciplina.titulo;
 
                 const sms_data = {
                     id: '1',
