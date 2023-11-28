@@ -20,7 +20,7 @@
                             <a href="{{ route($params['main_route'].'.index')}}" class="btn btn-primary btn-xs"><span class="fas fa-arrow-left"></span>  Voltar</a>
                         </div>
                     </div>
-                    
+
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body ">
@@ -34,8 +34,8 @@
                         </div>
                     @endif
 
-                    @if( isset($data))  
-                        {{ 
+                    @if( isset($data))
+                        {{
                             Form::model($data,[
                                 'route' => [$params['main_route'].'.update',$data->id]
                                 ,'class' => 'form'
@@ -50,6 +50,13 @@
                         {{Form::text('titulo',null,['class' => 'form-control', 'placeholder' => 'Título'])}}
                     </div>
                     <div class="form-group">
+                        {{Form::label('grupo_disciplina_id', 'Grupo de Disciplina')}}
+                        {{Form::select('grupo_disciplinas_id',
+                                $preload['grupo_disciplinas'],
+                                ((isset($data->grupo_disciplina_id)) ? $data->grupo_disciplina_id : null),
+                                ['id'=>'grupo_disciplina_id','class' =>'form-control'])}}
+                    </div>
+                    <div class="form-group">
                         {{Form::submit('Salvar',['class'=>'btn btn-success btn-sm'])}}
                     </div>
                     {{ Form::close() }}
@@ -57,7 +64,7 @@
                 <!-- /.card-body -->
               </div>
 
-                
+
            </div>
        </div>
     </section>
@@ -68,5 +75,5 @@
 @stop
 
 @section('js')
-    
+
 @stop

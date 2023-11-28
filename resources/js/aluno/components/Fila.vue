@@ -87,11 +87,8 @@ export default {
                 if(result){
                     return false;
                 }
-                    return true;
-            }else{
-                return true;
             }
-
+            return true;
         },
 
         isUser(user_id){
@@ -127,7 +124,7 @@ export default {
         },
 
         pegarSenha(id){
-            $("#btn_pegar_senha").attr('disabled','disabled');
+            $('#btn_pegar_senha').prop('disabled', true);
             axios.post(process.env.MIX_APP_URL+'/api/pegarsenha',
                     {
                         aula_id: id,
@@ -140,47 +137,69 @@ export default {
                             type: 'warning',
                         // all of other options may go here
                         });
+                    }else{
+                        this.$toast.open({
+                            message: response.data.message,
+                            type: 'success',
+                        // all of other options may go here
+                        });
                     }
 
                 })
                 .catch(error => {
-                    if(error.response.status == 401){
+                    if(error.status == 401){
                         window.location.href= process.env.MIX_APP_URL;
                     }else{
                         this.$toast.open({
-                            message: error.response.data.message,
+                            message: error.data.message,
                             type: 'error',
                         // all of other options may go here
                         });
                     }
-                })
-                // $("#btn_pegar_senha").removeAttr('disabled');
+                });
+            $('#btn_pegar_senha').prop('disabled', false);
         },
 
         desistirSenha(id){
-            axios.post(process.env.MIX_APP_URL+'/api/desistirsenha',
+            $('#btn_desistir_senha').prop('disabled', true);
+            axios
+                    .post(process.env.MIX_APP_URL+'/api/desistirsenha',
                     {
                         aula_id: id,
                     }
-                )
-            .catch(error => {
-                if(error.response.status == 401){
-                    window.location.href= process.env.MIX_APP_URL;
-                }else if(error.response.status == 422){
-                        this.$toast.open({
-                            message: error.response.data.message,
-                            type: 'error',
-                        // all of other options may go here
-                        });
-                }else{
-                    this.$toast.open({
-                        message: error.response.data.message,
-                        type: 'error',
-                    // all of other options may go here
+                    ).then(response => {
+                        if(response.status == 208){
+                            this.$toast.open({
+                                message: response.data.message,
+                                type: 'warning',
+                            // all of other options may go here
+                            });
+                        }else{
+                            this.$toast.open({
+                                message: response.data.message,
+                                type: 'success',
+                            // all of other options may go here
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        if(error.response.status == 401){
+                            window.location.href= process.env.MIX_APP_URL;
+                        }else if(error.response.status == 422){
+                                this.$toast.open({
+                                    message: error.data.message,
+                                    type: 'error',
+                                // all of other options may go here
+                                });
+                        }else{
+                            this.$toast.open({
+                                message: error.data.message,
+                                type: 'error',
+                            // all of other options may go here
+                            });
+                        }
                     });
-                }
-            })
-
+            $('#btn_desistir_senha').prop('disabled', false);
         },
 
     },
@@ -188,8 +207,6 @@ export default {
         this.carregarFila();
         this.listenChannel();
     }
-
-
 }
 </script>
 

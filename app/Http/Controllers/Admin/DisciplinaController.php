@@ -7,13 +7,16 @@ use Illuminate\Http\Request;
 use App\Models\Disciplina;
 use App\Http\Requests\Admin\Disciplina\DisciplinaRequest ;
 use App\Http\Requests\Admin\Disciplina\DisciplinaUpdateRequest;
+use App\Models\GrupoDisciplina;
 
 class DisciplinaController extends Controller
 {
 
-    public function __construct(Disciplina $disciplinas)
+    private $params, $disciplina, $grupo_disciplina;
+    public function __construct(Disciplina $disciplinas, GrupoDisciplina $grupo_disciplinas)
     {
         $this->disciplina = $disciplinas;
+        $this->grupo_disciplina = $grupo_disciplinas;
 
         // Default values
         $this->params['titulo']='Disciplina';
@@ -50,7 +53,9 @@ class DisciplinaController extends Controller
                 'titulo' => 'Cadastrar'
             ]];
         $params = $this->params;
-        return view('admin.disciplina.create',compact('params'));
+        $preload['grupo_disciplinas'] = $this->grupo_disciplina->orderBy('titulo')->pluck('titulo','id');
+
+        return view('admin.disciplina.create',compact('params','preload'));
     }
 
     public function store(DisciplinaRequest $request)
@@ -81,7 +86,8 @@ class DisciplinaController extends Controller
        $params = $this->params;
 
        $data = $this->disciplina->find($id);
-       return view('admin.disciplina.show',compact('params','data'));
+       $preload['grupo_disciplinas'] = $this->grupo_disciplina->orderBy('titulo')->pluck('titulo','id');
+       return view('admin.disciplina.show',compact('params','data','preload'));
     }
 
     public function edit($id)
@@ -98,7 +104,9 @@ class DisciplinaController extends Controller
            ]];
        $params = $this->params;
        $data = $this->disciplina->find($id);
-       return view('admin.disciplina.create',compact('params', 'data'));
+       $preload['grupo_disciplinas'] = $this->grupo_disciplina->orderBy('titulo')->pluck('titulo','id');
+
+       return view('admin.disciplina.create',compact('params', 'data','preload'));
     }
 
     public function update(DisciplinaUpdateRequest $request, $id)

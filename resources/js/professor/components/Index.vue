@@ -14,10 +14,10 @@
                             <div class="header border-bottom border-light w-100">
                                 <h3 class="text-center w-100"><strong>Prof.(a): {{ items.professor }}</strong></h3>
                             </div>
-                            <div v-if="(items.cabine != '')" class="numero">
+                            <!-- <div v-if="(items.cabine != '')" class="numero">
                                 <p class="p-0">Cabine: </p>
                                 <h1 class="text-center">{{ items.cabine }} </h1>
-                            </div>
+                            </div> -->
                             <div class="nome">
                                 <h3 class="text-center">{{ items_fila.nome }}</h3>
                             </div>
@@ -36,7 +36,7 @@
                     </div>
 
 
-                    <div class="col-12 m-0 p-3">
+                    <div v-if="(items.professor_id == user_id)" class="col-12 m-0 p-3">
                         <div class="row">
                             <div class="col-6 justify-content-center">
                                 <button class="w-100 h-100 p-3 btn btn-primary btn-xs" @click="pausar(items.id)" ><h5>Pausar Atendimento</h5></button>
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <fila :aula_id="items.id" ></fila>
+                    <fila v-if="(items.professor_id == user_id)" :aula_id="items.id" ></fila>
                 </div>
                 <!-- IF AULA_ID   -->
             </div>

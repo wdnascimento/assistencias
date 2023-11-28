@@ -21,13 +21,11 @@ class AlunoController extends Controller
         $dataForm  = $request->only('aula_id');
         $dataForm['user_id'] = Auth::User()->id;
 
-        if($this->atendimento->solicitarSenha($dataForm)){
-            return response()->json(true, 201);
+        $error = $this->atendimento->solicitarSenha($dataForm);
+        if($error['result']){
+            return response()->json($error, 201);
         }else{
-            return response()->json([
-                'message'   => 'Erro ao Retirar Senha',
-                'errors'    => 'Erro ao Retirar Senha' ,
-            ], 208);
+            return response()->json($error, 208);
         }
     }
 
@@ -36,13 +34,11 @@ class AlunoController extends Controller
         $dataForm  = $request->only('aula_id');
         $dataForm['user_id'] = Auth::User()->id;
 
-        if($this->atendimento->desistirSenha($dataForm)){
-            return response()->json(true, 201);
+        $error = $this->atendimento->desistirSenha($dataForm);
+        if($error['result']){
+            return response()->json($error, 201);
         }else{
-            return response()->json([
-                'message'   => 'Erro ao Desistir Senha',
-                'errors'    => 'Erro ao Desistir Senha'
-            ], 208);
+            return response()->json($error, 208);
         }
     }
 }

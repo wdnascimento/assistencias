@@ -33,7 +33,7 @@ class Aula extends Model
         return Aula::select( 'aulas.id','salas.id as sala_id','professors.id as professor_id'
                                     ,'salas.titulo as sala', 'salas.turma_id'
                                     ,DB::raw("(SUBSTRING_INDEX(professors.name, ' ', 1)) as professor")
-                                    ,DB::raw("(SELECT COUNT(id) FROM atendimentos WHERE atendimentos.status IN (0,1) AND atendimentos.aula_id = aulas.id ) as size_fila")
+                                    ,DB::raw("(SELECT COUNT(id) FROM atendimentos WHERE atendimentos.status IN (0,1) AND atendimentos.aula_id = aulas.id AND atendimentos.deleted_at IS NULL ) as size_fila")
                                     ,'disciplinas.titulo as disciplina' )
                         ->join('salas', function($join)
                         {

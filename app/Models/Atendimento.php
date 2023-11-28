@@ -182,35 +182,79 @@ class Atendimento extends Model
             DB::beginTransaction();
             $aula = new Aula();
             // testa se a aula está ativa e pega a sala_id
-            if($aula = $aula->select('sala_id','status')->where('id',$data['aula_id'])->first()){
-                if($aula['status'] == '1' && ($this->where('aula_id',$data['aula_id'])->where('user_id',$data['user_id'])->where('status',1)->first() == NULL)){
-                    $data['ordem'] = $this->where('aula_id',$data['aula_id'])->withTrashed()->max('ordem') + 1;
-                    if($this->create($data)){
-                        DB::commit();
+            if($aula = $aula->select('sala_id','status','disciplina_id')->where('id',$data['aula_id'])->where('status',1)->first()){
+                if($this->where('aula_id',$data['aula_id'])->where('user_id',$data['user_id'])->where('status',1)->first() == NULL){
+                    // Senhas ativas do aluno
+
+                    if($grupo_disciplina = Disciplina::find($aula['disciplina_id'])->grupoDisciplina){
+                        $senhas_aluno = $this   ->join('aulas', function ($join) {
+                                                    $join   ->on('aulas.id','atendimentos.aula_id')
+                                                            ->where('aulas.status', 1);
+                                                })
+                                                ->join('disciplinas', function ($join) use ($grupo_disciplina) {
+                                                    $join   ->on('disciplinas.id','aulas.disciplina_id')
+                                                            ->where('disciplinas.grupo_disciplina_id', $grupo_disciplina['id']);
+                                                })
+                                                ->where('atendimentos.user_id',$data['user_id'])
+                                                ->whereIn('atendimentos.status',[0,1])->count();
+                        if($senhas_aluno){
+                            Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
+                            Event::dispatch(new AulaSalaEvent($aula['sala_id']));
+                            Event::dispatch(new FilasAtivasEvent($data['aula_id']));
+                            $errors['message'] = 'Você já possui senha para essa disciplina';
+                            $errors['result'] = false;
+                            return $errors;
+                        }
+
+                        $data['ordem'] = $this->where('aula_id',$data['aula_id'])->withTrashed()->max('ordem') + 1;
+                        if($this->create($data)){
+                            DB::commit();
+                            Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
+                            Event::dispatch(new AulaSalaEvent($aula['sala_id']));
+                            Event::dispatch(new FilasAtivasEvent($data['aula_id']));
+                            $errors['message'] ='Senha Retirada com Sucesso';
+                            $errors['result'] = true;
+                            return $errors;
+                        }
+                        DB::rollback();
+
+                    }else{
                         Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
                         Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                         Event::dispatch(new FilasAtivasEvent($data['aula_id']));
-                        return true;
+                        $errors['message'] = 'Erro ao localizar grupo da disciplina';
+                        $errors['result'] = false;
+                        return $errors;
                     }
+
+                    // $grupo_disciplina = $disciplina->find($aula['disciplina_id'])->grupoDisciplina
+
+
+
                 }
-                DB::rollback();
 
                 Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
                 Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($data['aula_id']));
-                return false;
+                $errors['message'] = 'Erro, Você já possui senha para esta aula';
+                $errors['result'] = false;
+                return $errors;
 
             }
             Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
             Event::dispatch(new FilasAtivasEvent($data['aula_id']));
-            DB::rollback();
-            return false;
+            $errors['message'] = 'Erro, Aula Inativa';
+            $errors['result'] = false;
+            return $errors;
 
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
         }
-        return false;
+
+        $errors['message'] = 'Erro ao retirar Senha';
+        $errors['result'] = false;
+        return $errors;
     }
 
     public function desistirSenha($data){
@@ -232,7 +276,9 @@ class Atendimento extends Model
                 Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
                 Event::dispatch(new AulaSalaEvent($aula['sala_id']));
                 Event::dispatch(new FilasAtivasEvent($data['aula_id']));
-                return true;
+                $errors['message'] = 'Desistência Realizada com Sucesso';
+                $errors['result'] = true;
+                return $errors;
             }
             $aula = new Aula();
             $aula =$aula->select('sala_id')->where('id',$data['aula_id'])->first();
@@ -241,10 +287,15 @@ class Atendimento extends Model
             Event::dispatch(new AulasAtivasEvent($aula->aulaTurma($data['aula_id'])));
             Event::dispatch(new AulaSalaEvent($aula['sala_id']));
             Event::dispatch(new FilasAtivasEvent($data['aula_id']));
-            return false;
+            $errors['message'] = 'Erro ao desistir da aula';
+            $errors['result'] = false;
+            return $errors;
 
        } catch (Exception $e) {
-           DB::rollback();
+            DB::rollback();
+            $errors['message'] = $e;
+            $errors['result'] = false;
+            return $errors;
            throw $e;
        }
    }

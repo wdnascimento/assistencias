@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ArquivoController;
 use App\Http\Controllers\Admin\AtendimentoController as AdminAtendimentoController;
 use App\Http\Controllers\Admin\AulaController as AdminAulaController;
 use App\Http\Controllers\Admin\DisciplinaController;
+use App\Http\Controllers\Admin\GrupoDisciplinaController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\IndexController;
 use App\Http\Controllers\Admin\ProfessorController;
@@ -122,6 +123,15 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::get('disciplina/show/{id}', [DisciplinaController::class,'show'])->name('admin.disciplina.show');
     Route::put('disciplina/update/{id}', [DisciplinaController::class,'update'])->name('admin.disciplina.update');
     Route::delete('disciplina/destroy/{id}', [DisciplinaController::class,'destroy'])->name('admin.disciplina.destroy');
+
+    //Grupo Disciplina
+    Route::get('grupo_disciplina', [GrupoDisciplinaController::class,'index'])->name('admin.grupo_disciplina.index');
+    Route::get('grupo_disciplina/create', [GrupoDisciplinaController::class,'create'])->name('admin.grupo_disciplina.create');
+    Route::post('grupo_disciplina/store', [GrupoDisciplinaController::class,'store'])->name('admin.grupo_disciplina.store');
+    Route::get('grupo_disciplina/edit/{id}', [GrupoDisciplinaController::class,'edit'])->name('admin.grupo_disciplina.edit');
+    Route::get('grupo_disciplina/show/{id}', [GrupoDisciplinaController::class,'show'])->name('admin.grupo_disciplina.show');
+    Route::put('grupo_disciplina/update/{id}', [GrupoDisciplinaController::class,'update'])->name('admin.grupo_disciplina.update');
+    Route::delete('grupo_disciplina/destroy/{id}', [GrupoDisciplinaController::class,'destroy'])->name('admin.grupo_disciplina.destroy');
 
      //Sala
     Route::get('sala', [SalaController::class,'index'])->name('admin.sala.index');

@@ -14,7 +14,9 @@ class DisciplinaUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'titulo' => 'required|min:3|unique:disciplinas,titulo,'.$this->id
+            'titulo' => 'required|min:3|unique:disciplinas,titulo,'.$this->id,
+            'grupo_disciplina_id' => 'required'
+
         ];
     }
 
@@ -24,6 +26,7 @@ class DisciplinaUpdateRequest extends FormRequest
             'titulo.required' =>'O campo título é de preenchimento obrigatório!',
             'titulo.min' =>'O campo título precisa ter no mínimo 3 caracteres!',
             'titulo.unique' =>'Disciplina já cadastrada',
+            'grupo_disciplina_id.required' =>'O grupo de disciplinas é obrigatório!',
         ];
     }
 

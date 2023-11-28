@@ -396,6 +396,14 @@ return [
            /* 'label'       => 4,
             'label_color' => 'success', */
         ],
+        [
+            'text'        => 'Grupo de Disciplinas',
+            'url'         => 'admin/grupo_disciplina',
+            'icon'        => 'fas fa-layer-group',
+            'can'         => ['administrador'],
+           /* 'label'       => 4,
+            'label_color' => 'success', */
+        ],
         ['header' => 'Alunos','can' => ['administrador']] ,
         [
             'text'    => 'Controle de Alunos',

@@ -4,7 +4,7 @@
             <div  id="icons-main" class="d-flex flex-column align-items-center">
                 <div class="w-100 py-2 px-5 h4 d-flex justify-content-between">
                         <p class="mb-0 align-self-start"><i class="fa-solid fa-book" aria-hidden="true"></i> {{ items.sala }}</p>
-                        <p v-if="emAtendimento(index)" class="mb-0 align-self-start">Alunos em Fila: {{ items.size_fila }}</p>
+                        <p v-if="(items.size_fila >  0)" class="mb-0 align-self-start">Alunos em Fila: {{ items.size_fila }}</p>
                         <p v-else class="mb-0 align-self-start">Sem Fila</p>
                 </div>
                 <div id="body" :class="'w-100 m-0 flex-grow-1 ' + ((emAtendimento(index)) ? ((userIdEmAtendimento(index) == user_id) ? 'bg-green' : 'bg-yellow' ): 'bg-danger' ) ">
