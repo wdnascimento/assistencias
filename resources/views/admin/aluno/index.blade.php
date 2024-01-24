@@ -20,7 +20,7 @@
                             <a href="{{ route($params['main_route'].'.create')}}" class="btn btn-primary btn-xs"><span class="fas fa-plus"></span> Novo Cadastro</a>
                         </div>
                     </div>
-                    {{ Form::open(['route' => [$params['main_route'].'.index',((isset($preload['turma'])) ? $preload['turma'] : '')],'method' =>'GET', 'id' => 'form_filtro']) }}
+                    {{ Form::open(['route' => [$params['main_route'].'.index'],'method' =>'GET', 'id' => 'form_filtro']) }}
                     <div class="row">
                         <div class="col-4 pt-3">
                                 {{Form::select('turma_id',
@@ -77,7 +77,7 @@
                             </tbody>
                         </table>
                         <div class="box-footer clearfix p-3 d-flex justify-content-end align-content-center">
-                            {{ $data->links() }}
+                            {{ $data->appends(request()->all())->links()  }}
                         </div>
                     @else
                         <div class="alert alert-success m-2" role="alert">

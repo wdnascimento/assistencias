@@ -48,7 +48,8 @@
                             Atenção!! Este arquivo deve conter um arquivo com as seguintes colunas:
                             <br>
                             <br >
-                                <p class="font-weight-bold">turma_id, ano, name, numero, data_nascimento, celular, cabine</p>
+                                <p class="font-weight-bold">turma_id (COD_TURMA), ano (0000), nome, numero(00000000), data_nascimento(DDMMAAAA), celular (00000000000), cabine (00)</p>
+
                             <br>
                             turma_id => Deve corresponder ao id do cadastro de turmas;
                             <br>

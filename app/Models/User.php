@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'numero', 'cabine','ano','send_sms','celular', 'turma_id','password'
+        'name', 'numero', 'cabine','ano','send_sms','celular', 'turma_id','importado','password'
     ];
 
     protected $hidden = [

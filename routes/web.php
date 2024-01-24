@@ -152,7 +152,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::delete('administrador/destroy/{id}', [AdminController::class,'destroy'])->name('admin.administrador.destroy');
 
     //Aluno
-    Route::get('aluno/index/{turma_id?}', [AlunoController::class,'index'])->name('admin.aluno.index');
+    Route::get('aluno/index', [AlunoController::class,'index'])->name('admin.aluno.index');
     Route::get('aluno/create', [AlunoController::class,'create'])->name('admin.aluno.create');
     Route::post('aluno/store', [AlunoController::class,'store'])->name('admin.aluno.store');
     Route::get('aluno/edit/{id}', [AlunoController::class,'edit'])->name('admin.aluno.edit');
@@ -174,6 +174,8 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::get('arquivo/create', [ArquivoController::class,'create'])->name('admin.arquivo.create');
     Route::post('arquivo/store', [ArquivoController::class,'store'])->name('admin.arquivo.store');
     Route::get('arquivo/import/{id}', [ArquivoController::class,'import'])->name('admin.arquivo.import');
+    Route::get('arquivo/removeimport/{id}', [ArquivoController::class,'removeimport'])->name('admin.arquivo.removeimport');
+    Route::post('arquivo/remove', [ArquivoController::class,'remove'])->name('admin.arquivo.remove');
     Route::get('arquivo/show/{id}', [ArquivoController::class,'show'])->name('admin.arquivo.show');
     Route::put('arquivo/update/{id}', [ArquivoController::class,'update'])->name('admin.arquivo.update');
     Route::delete('arquivo/destroy/{id}', [ArquivoController::class,'destroy'])->name('admin.arquivo.destroy');

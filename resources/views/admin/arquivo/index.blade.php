@@ -7,8 +7,8 @@
 @stop
 
 @section('content')
-    <section class="content" >
-       <div class="row">
+    <section class="content" id="app">
+       <div  class="row">
            <div class="col-12">
             <div class="card">
                 <div class="card-header">
@@ -52,8 +52,16 @@
                                     <td>{{ $item->data_hora }}</td>
                                     <td>{{ $item->usuario }}</td>
                                     <td>{{ $item->desc_importado }}</td>
+
+
                                     <td>
-                                        <a href="{{ route($params['main_route'].'.import', $item->id) }}" class="btn btn-info btn-xs"><span class="fas fa-edit"></span> Importar</a>
+                                        @if($item->importado)
+                                            <a href="{{ route($params['main_route'].'.removeimport', $item->id) }}" class="btn btn-danger btn-xs"><span class="fas fa-trash"></span> Remover Importação</a>
+                                        @else
+                                            <a href="{{ route($params['main_route'].'.import', $item->id) }}" class="btn btn-info btn-xs"><span class="fas fa-edit"></span> Importar</a>
+                                            <a href="{{ asset('storage/'.$item->titulo) }}" class="btn btn-danger btn-xs"><span class="fas fa-trash"></span> Excluir Arquivo</a>
+                                        @endif
+                                        <a href="{{ asset('storage/'.$item->titulo) }}" class="btn btn-primary btn-xs"><span class="fas fa-eye"></span> Ver Arquivo</a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -80,5 +88,5 @@
 @stop
 
 @section('js')
-
+    <script  type="module"  src="{{ asset('js/admin/app.js') }}" ></script>
 @stop
