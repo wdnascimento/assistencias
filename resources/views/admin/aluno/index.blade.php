@@ -76,9 +76,13 @@
 
                             </tbody>
                         </table>
+                        <div class="box-footer clearfix px-3 font-weight-bold d-flex justify-content-end align-content-center">
+                            {{ $data->total()  }} alunos encontrados.
+                        </div>
                         <div class="box-footer clearfix p-3 d-flex justify-content-end align-content-center">
                             {{ $data->appends(request()->all())->links()  }}
                         </div>
+
                     @else
                         <div class="alert alert-success m-2" role="alert">
                             Nenhuma informação cadastrada.

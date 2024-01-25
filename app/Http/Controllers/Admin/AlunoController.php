@@ -111,7 +111,7 @@ class AlunoController extends Controller
         $insert = $this->aluno->insertValidaCabine($dataForm);
 
         if($insert){
-            return redirect()->route($this->params['main_route'].'.index',$dataForm['turma_id']);
+            return redirect()->route($this->params['main_route'].'.index',['turma_id' => $dataForm['turma_id']]);
         }else{
             return redirect()->route($this->params['main_route'].'.create')->withErrors(['Falha ao fazer Inserir.']);
         }
@@ -188,7 +188,7 @@ class AlunoController extends Controller
         }
 
         if($data->updateValidaCabine($dataForm,$id)){
-            return redirect()->route($this->params['main_route'].'.index',$dataForm['turma_id']);
+            return redirect()->route($this->params['main_route'].'.index',['turma_id' => $dataForm['turma_id']]);
         }else{
             return redirect()->route($this->params['main_route'].'.create')->withErrors(['Falha ao editar.']);
         }
@@ -206,7 +206,7 @@ class AlunoController extends Controller
         // Pega a turma para redirecionar
         $turma_id = $data['turma_id'];
         if($data->delete()){
-            return redirect()->route($this->params['main_route'].'.index',$turma_id);
+            return redirect()->route($this->params['main_route'].'.index',['turma_id' => $data['turma_id']]);
         }else{
             return redirect()->route($this->params['main_route'].'.create')->withErrors(['Falha ao deletar.']);
         }

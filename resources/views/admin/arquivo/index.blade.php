@@ -59,7 +59,6 @@
                                             <a href="{{ route($params['main_route'].'.removeimport', $item->id) }}" class="btn btn-danger btn-xs"><span class="fas fa-trash"></span> Remover Importação</a>
                                         @else
                                             <a href="{{ route($params['main_route'].'.import', $item->id) }}" class="btn btn-info btn-xs"><span class="fas fa-edit"></span> Importar</a>
-                                            <a href="{{ asset('storage/'.$item->titulo) }}" class="btn btn-danger btn-xs"><span class="fas fa-trash"></span> Excluir Arquivo</a>
                                         @endif
                                         <a href="{{ asset('storage/'.$item->titulo) }}" class="btn btn-primary btn-xs"><span class="fas fa-eye"></span> Ver Arquivo</a>
                                     </td>
