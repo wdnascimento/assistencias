@@ -48,7 +48,7 @@
                             Atenção!! Este arquivo deve conter um arquivo com as seguintes colunas:
                             <br>
                             <br >
-                                <p class="font-weight-bold">turma_id (COD_TURMA), ano (0000), nome, numero(00000000), data_nascimento(DDMMAAAA), celular (00000000000), cabine (00)</p>
+                                <p class="font-weight-bold">turma_id (COD_TURMA), ano (0000), nome, numero(00000000), data_nascimento(DDMMAAAA), celular (00000000000), cabine (00), ativo (0 | 1)</p>
 
                             <br>
                             turma_id => Deve corresponder ao id do cadastro de turmas;
@@ -56,6 +56,8 @@
                             cabine => Não obrigatório para quando informado o celular;
                             <br>
                             celular => Não obrigatório para quando informado a cabine;
+                            <br>
+                            ativo => Obrigatório (0 - Não / 1 - Sim);
 
                         </div>
                         <div class="form-group col-12 col-md-12 col-lg-12 pt-2">

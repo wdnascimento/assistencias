@@ -144,7 +144,7 @@ class ArquivoController extends Controller
 
                 $titulos = null;
                 // REQUIRED FIELDS
-                $fields = array("turma_id","ano","nome","numero","data_nascimento");
+                $fields = array("turma_id","ano","nome","numero","data_nascimento","ativo");
                 // FLAG FIELDS
                 $fields_flag = array("celular","cabine");
                 // MAP FIELDS
@@ -203,6 +203,12 @@ class ArquivoController extends Controller
                                     }
                                     $tmp_data[$column]=$csv[$value];
                                 break;
+                                case 'ativo' :
+                                    if($csv[$value] != ""){
+                                        $tmp_data["ativo"] = 1;
+                                    }
+                                    $tmp_data[$column]=$csv[$value];
+                                break;
                                 default:
                                     $tmp_data[$column]=$csv[$value];
                                 break;
@@ -212,15 +218,25 @@ class ArquivoController extends Controller
                         $aluno = $this->user->where('numero',$tmp_data["numero"])->withTrashed()->first();
                         $tmp_data["importado"] = $id;
                         if($aluno){
-                            if($aluno->trashed()){
-                                $aluno->restore();
+                            if($aluno->trashed() ){
+                                if($tmp_data["ativo"] == 1){
+                                    $aluno->restore();
+                                }
                             }
-                            if(!$aluno->update($tmp_data)){
-                                return redirect()->back()->withErrors(['Erro importar (Atualizar) (Linha '.$i.' => '.implode(", ", $csv).').']);
+                            if($tmp_data["ativo"] == 1){
+                                if(!$aluno->update($tmp_data)){
+                                    return redirect()->back()->withErrors(['Erro importar (Atualizar) (Linha '.$i.' => '.implode(", ", $csv).').']);
+                                }
+                            }else{
+                                if(!$aluno->delete()){
+                                    return redirect()->back()->withErrors(['Erro importar (Atualizar) (Linha '.$i.' => '.implode(", ", $csv).').']);
+                                }
                             }
                         }else{
-                            if(!$this->user->create($tmp_data)){
-                                return redirect()->back()->withErrors(['Erro importar (Linha '.$i.' => '.implode(", ", $csv).').']);
+                            if($tmp_data["ativo"] == 1){
+                                if(!$this->user->create($tmp_data)){
+                                    return redirect()->back()->withErrors(['Erro importar (Linha '.$i.' => '.implode(", ", $csv).').']);
+                                }
                             }
 
                         }
