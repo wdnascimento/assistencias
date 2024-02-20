@@ -316,6 +316,35 @@ export default {
                         console.error('Erro na requisição');
                         }
                     });
+
+                // WHATS
+
+                const bodyContent = new FormData();
+                bodyContent.append("endpoint", "enviar_mensagem_assistencia");
+                bodyContent.append("matricula", data.aluno.numero);
+                bodyContent.append("primeiroNome", data.aluno.nome);
+                bodyContent.append("mesa", data.aula.sala.titulo);
+                bodyContent.append("professor", professor);
+                bodyContent.append("celular", "55"+phone);
+                bodyContent.append("assistencia", data.aula.sala.titulo);
+                bodyContent.append("emailProfessor", "professor@email.com.br");
+
+                axios.post("https://fqgerenciador.com.br/fila/", bodyContent, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+
+                // WHATS
+
+
+
             }
 
         }
