@@ -119,7 +119,6 @@ export default {
             const self = this;
             window.Echo.channel('assistencia')
                 .listen('.PegarSenha', (e) => {
-                    console.log(e);
                     self.$store.commit('resetSala01');
                     self.$store.commit('setSala01',e.data);
                     var total = (e.total - e.per_page < 0) ? 0 : (e.total - e.per_page);

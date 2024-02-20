@@ -159,9 +159,18 @@ class ArquivoController extends Controller
                         $map_fields = NULL;
                         // GET TITLES
                         // TO LOWER AND TRIM TITLES
-                        $titulos= array_map('strtolower',array_map('trim', $csv));
+                        $titulos= array_map('trim',array_map('strtolower', $csv));
+                        $titulos = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $titulos);
+                        foreach($titulos as $indice => $valor){
+                            $new_titulos[$indice] = str_replace('"','',$valor);
+                        }
+
+                        $titulos = $new_titulos;
+
                         // VALIDATE FOR REQUIREDS COLUMNS
                         foreach($fields as $v){
+                            $v = trim($v);
+                            // var_dump($v);
                             if (! in_array(trim($v),$titulos) ) {
                                 return redirect()->back()->withErrors(['Erro importar (Coluna '.$v.' faltante no arquivo).']);
                             }
@@ -190,11 +199,14 @@ class ArquivoController extends Controller
                                     $tmp_data["cabine"]= intval($csv[$value]);
                                 break;
                                 case "nome" :
-                                    $tmp_data["name"]= strtoupper($csv[$value]);
+                                    $tmp_data["name"]= mb_strtoupper($csv[$value]);
                                 break;
                                 case "data_nascimento" :
                                     if(format_birthday_password($csv[$value]) != false){
                                         $tmp_data["password"]= Hash::make(format_birthday_password($csv[$value]));
+                                    }else{
+                                        $tmp_data["password"]= Hash::make('positivo2020');
+
                                     }
                                 break;
                                 case 'celular' :

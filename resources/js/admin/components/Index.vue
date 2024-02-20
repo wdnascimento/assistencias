@@ -17,9 +17,9 @@
                     <div class="col-7" >
                         <h2>
                             Aluno:
-                            <span v-if="(items.cabine )">{{ items.cabine }}</span>
-                            <span v-else>{{ items.numero }}</span>
-                             - {{ items.aluno }}
+                            <span v-if="(items.cabine )">Cabine {{ items.cabine }} - </span>
+                            <!-- <span v-else>{{ items.numero }}</span> -->
+                             {{ items.aluno }}
                         </h2>
                         <h4>
                             Prof. {{ items.professor }} - {{ items.disciplina }}

@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/aulasativas/{turma_id}', [AulaController::class,'ativas'])->name('api.aulas.ativas');
 Route::get('/aulasala/{aula_id}', [AulaController::class,'aulasala'])->name('api.aula.sala');
 Route::get('/filaaula/{aula_id}', [AtendimentoController::class,'filaaula'])->name('api.aluno.filaaula');
-Route::get('/painelsala/{sala_id}', [AdminAtendimentoController::class,'painel'])->name('api.admin.painel');
 
 
 Route::group(['middleware' => ['auth', 'throttle:2200,1']], function () {
@@ -32,8 +31,9 @@ Route::group(['middleware' => ['auth', 'throttle:2200,1']], function () {
     Route::post('/desistirsenha', [AlunoController::class,'desistirsenha'])->name('api.aluno.desistirsenha');
 });
 
-// Route::group(['middleware' => ['auth:admin', 'throttle:2200,1']], function () {
-// });
+Route::group(['middleware' => ['auth:admin', 'throttle:2200,1']], function () {
+    Route::get('/painelsala/{sala_id}', [AdminAtendimentoController::class,'painel'])->name('api.admin.painel');
+});
 
 Route::group(['middleware' => ['auth:professor', 'throttle:2200,1']], function () {
     Route::post('/cadastraraula', [ProfessorAulaController::class,'cadastraraula'])->name('api.professor.cadastraraula');

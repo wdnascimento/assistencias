@@ -25,4 +25,21 @@
 
 @section('js')
     <script src="{{ asset('js/admin/app.js') }}" ></script>
+    <script>
+
+        $(document).ready(function () {
+            $('[data-widget="pushmenu"]').on('mousedown',function(event){
+                if($('body').hasClass('sidebar-collapse')){
+                    $('div[class="content-header"]').show();
+                    // <li class="nav-item fullscreen">
+                    $('li[class="nav-item fullscreen"]').hide();
+                }else{
+                    $('li[class="nav-item fullscreen"]').show();
+                    $('div[class="content-header"]').hide();
+                }
+            });
+        });
+
+
+    </script>
 @stop
