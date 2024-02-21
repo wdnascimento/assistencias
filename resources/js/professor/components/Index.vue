@@ -317,7 +317,9 @@ export default {
                         }
                     });
 
+                // ------------------------
                 // WHATS
+                // ------------------------
 
                 const bodyContent = new FormData();
                 bodyContent.append("endpoint", "enviar_mensagem_assistencia");
@@ -329,11 +331,13 @@ export default {
                 bodyContent.append("assistencia", data.aula.sala.titulo);
                 bodyContent.append("emailProfessor", "professor@email.com.br");
 
-                axios.post("https://fqgerenciador.com.br/fila/", bodyContent, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
+                axios({
+                    method: "post",
+                    url: "ttps://fqgerenciador.com.br/fila",
+                    data: bodyContent,
+                    headers: { "Content-Type": "multipart/form-data" },
+                    })
+
                 .then(response => {
                     console.log(response.data);
                 })
@@ -341,9 +345,9 @@ export default {
                     console.error('Erro:', error);
                 });
 
+                // ------------------------
                 // WHATS
-
-
+                // ------------------------
 
             }
 

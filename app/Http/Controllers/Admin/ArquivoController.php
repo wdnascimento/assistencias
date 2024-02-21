@@ -160,7 +160,7 @@ class ArquivoController extends Controller
                         // GET TITLES
                         // TO LOWER AND TRIM TITLES
                         $titulos= array_map('trim',array_map('strtolower', $csv));
-                        $titulos = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $titulos);
+                        $titulos = preg_replace('/[\x00-\x1F\x80-\xFF]/','', $titulos);
                         foreach($titulos as $indice => $valor){
                             $new_titulos[$indice] = str_replace('"','',$valor);
                         }
@@ -202,12 +202,7 @@ class ArquivoController extends Controller
                                     $tmp_data["name"]= mb_strtoupper($csv[$value]);
                                 break;
                                 case "data_nascimento" :
-                                    if(format_birthday_password($csv[$value]) != false){
-                                        $tmp_data["password"]= Hash::make(format_birthday_password($csv[$value]));
-                                    }else{
-                                        $tmp_data["password"]= Hash::make('positivo2020');
-
-                                    }
+                                    $tmp_data["password"]= Hash::make($csv[$value]);
                                 break;
                                 case 'celular' :
                                     if($csv[$value] != ""){
