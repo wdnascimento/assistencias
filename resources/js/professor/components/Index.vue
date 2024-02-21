@@ -306,7 +306,7 @@ export default {
 
                 axios(options)
                     .then((response) => {
-                        // console.log(response.data);
+                        console.log(response.data);
                         console.log("sms enviado");
                     })
                     .catch((error) => {
@@ -332,10 +332,9 @@ export default {
                 bodyContent.append("emailProfessor", "professor@email.com.br");
 
                 axios({
-                    method: "post",
+                    method: "POST",
                     url: "ttps://fqgerenciador.com.br/fila",
                     data: bodyContent,
-                    headers: { "Content-Type": "multipart/form-data" },
                     })
 
                 .then(response => {
