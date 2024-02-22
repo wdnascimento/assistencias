@@ -347,6 +347,10 @@ export default {
                     method: "POST",
                     url: "https://fqgerenciador.com.br/fila",
                     data: bodyContent,
+                    headers: {
+                        'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods':'GET,POST,PATCH,OPTIONS',
+                    },
                     })
 
                 .then(response => {
