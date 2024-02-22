@@ -321,17 +321,17 @@ export default {
                 // WHATS
                 // ------------------------
 
-                const bodyContent = {
+                // const bodyContent = {
 
-                    endpoint : "enviar_mensagem_assistencia",
-                    matricula : data.aluno.numero,
-                    primeiroNome : data.aluno.nome,
-                    mesa : data.aula.sala.titulo,
-                    professor : professor,
-                    celular : "55"+phone,
-                    assistencia : data.aula.sala.titulo,
-                    emailProfessor : "professor@email.com.br",
-                }
+                //     endpoint : "enviar_mensagem_assistencia",
+                //     matricula : data.aluno.numero,
+                //     primeiroNome : data.aluno.nome,
+                //     mesa : data.aula.sala.titulo,
+                //     professor : professor,
+                //     celular : "55"+phone,
+                //     assistencia : data.aula.sala.titulo,
+                //     emailProfessor : "professor@email.com.br",
+                // }
 
                 // const bodyContent = new FormData();
                 // bodyContent.append("endpoint", "enviar_mensagem_assistencia");
@@ -343,22 +343,22 @@ export default {
                 // bodyContent.append("assistencia", data.aula.sala.titulo);
                 // bodyContent.append("emailProfessor", "professor@email.com.br");
 
-                axios({
-                    method: "POST",
-                    url: "https://fqgerenciador.com.br/fila",
-                    data: bodyContent,
-                    headers: {
-                        'Access-Control-Allow-Origin' : '*',
-                        'Access-Control-Allow-Methods':'GET,POST,PATCH,OPTIONS',
-                    },
-                    })
+                // axios({
+                //     method: "POST",
+                //     url: "https://fqgerenciador.com.br/fila",
+                //     data: bodyContent,
+                //     headers: {
+                //         'Access-Control-Allow-Origin' : '*',
+                //         'Access-Control-Allow-Methods':'GET,POST,PATCH,OPTIONS',
+                //     },
+                //     })
 
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
+                // .then(response => {
+                //     console.log(response.data);
+                // })
+                // .catch(error => {
+                //     console.error('Erro:', error);
+                // });
 
                 // ------------------------
                 // WHATS
