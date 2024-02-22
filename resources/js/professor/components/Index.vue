@@ -285,7 +285,7 @@ export default {
                 var aluno = data.aluno.name.split(" ")[0];
                 var professor = data.aula.professor.name.split(" ")[0];
                 var message= 'Olá, '+aluno+'. Chegou sua vez. '+ data.aula.sala.titulo +' - Professor: ' +professor+', Disciplina: '+ data.aula.disciplina.titulo;
-                console.log(phone);
+                // console.log(phone);
                 const sms_data = {
                     id: '1',
                     phone: phone,
@@ -321,19 +321,31 @@ export default {
                 // WHATS
                 // ------------------------
 
-                const bodyContent = new FormData();
-                bodyContent.append("endpoint", "enviar_mensagem_assistencia");
-                bodyContent.append("matricula", data.aluno.numero);
-                bodyContent.append("primeiroNome", data.aluno.nome);
-                bodyContent.append("mesa", data.aula.sala.titulo);
-                bodyContent.append("professor", professor);
-                bodyContent.append("celular", "55"+phone);
-                bodyContent.append("assistencia", data.aula.sala.titulo);
-                bodyContent.append("emailProfessor", "professor@email.com.br");
+                const bodyContent = {
+
+                    endpoint : "enviar_mensagem_assistencia",
+                    matricula : data.aluno.numero,
+                    primeiroNome : data.aluno.nome,
+                    mesa : data.aula.sala.titulo,
+                    professor : professor,
+                    celular : "55"+phone,
+                    assistencia : data.aula.sala.titulo,
+                    emailProfessor : "professor@email.com.br",
+                }
+
+                // const bodyContent = new FormData();
+                // bodyContent.append("endpoint", "enviar_mensagem_assistencia");
+                // bodyContent.append("matricula", data.aluno.numero);
+                // bodyContent.append("primeiroNome", data.aluno.nome);
+                // bodyContent.append("mesa", data.aula.sala.titulo);
+                // bodyContent.append("professor", professor);
+                // bodyContent.append("celular", "55"+phone);
+                // bodyContent.append("assistencia", data.aula.sala.titulo);
+                // bodyContent.append("emailProfessor", "professor@email.com.br");
 
                 axios({
                     method: "POST",
-                    url: "ttps://fqgerenciador.com.br/fila",
+                    url: "https://fqgerenciador.com.br/fila",
                     data: bodyContent,
                     })
 
