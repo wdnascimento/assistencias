@@ -1,9 +1,9 @@
 /node_modules
 /public/hot
 /public/storage
-/public/js/admin
-/public/js/aluno
-/public/js/professor
+/public/js/admin/
+/public/js/aluno/
+/public/js/professor/
 /storage/*.key
 /storage
 /vendor

@@ -33,6 +33,11 @@ Route::get('/index', function () {
     return view('welcome');
 });
 
+
+Route::get('/whats', function () {
+    return view('whats');
+});
+
 Route::group(['prefix' => 'aluno'], function(){
     Auth::routes();
     Route::post('login', [AuthLoginController::class, 'postLogin'])->name('aluno.login.post');
