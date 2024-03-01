@@ -20,11 +20,11 @@
                             <a href="{{ route($params['main_route'].'.create')}}" class="btn btn-primary btn-xs"><span class="fas fa-plus"></span> Novo Cadastro</a>
                         </div>
                     </div>
-                    
+
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
-                
+
                     @if(isset($data) && count($data))
                         <table class="table table-hover">
                             <thead>
@@ -40,14 +40,15 @@
                                     <td>{{ $item['name']}}</td>
                                     <td>{{ $item['email']}}</td>
                                     <td>
-                                        <a href="{{ route($params['main_route'].'.edit', $item['id']) }}" class="btn btn-info btn-xs"><span class="fas fa-edit"></span> Editar</a> 
+                                        <a href="{{ route($params['main_route'].'.edit', $item['id']) }}" class="btn btn-info btn-xs"><span class="fas fa-edit"></span> Editar</a>
                                         <a href="{{ route($params['main_route'].'.show', $item['id']) }}" class="btn btn-danger btn-xs"><span class="fas fa-trash"></span> Deletar</a>
+                                        <a href="{{ route($params['main_route'].'.trocarsenha', $item['id']) }}" class="btn btn-primary btn-xs"><span class="fas fa-eye"></span> Trocar Senha</a>
                                     </td>
                                 </tr>
                                 @endforeach
-                                
-                            
-                            
+
+
+
                             </tbody>
                         </table>
                     @else
@@ -59,7 +60,7 @@
                 <!-- /.card-body -->
               </div>
 
-                
+
            </div>
        </div>
     </section>
@@ -70,5 +71,5 @@
 @stop
 
 @section('js')
-    
+
 @stop

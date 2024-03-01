@@ -17,7 +17,11 @@
                             <h3 class="card-title">{{$params['subtitulo']}}</h3>
                         </div>
                         <div class="col-6 text-right">
+                            @if(isset($params['is_admin']))
+                            <a href="{{ route('admin.professor.index')}}" class="btn btn-primary btn-xs"><span class="fas fa-arrow-left"></span>  Voltar</a>
+                            @else
                             <a href="{{ route($params['main_route'].'.trocarsenha')}}" class="btn btn-primary btn-xs"><span class="fas fa-arrow-left"></span>  Voltar</a>
+                            @endif
                         </div>
                     </div>
 
@@ -42,8 +46,11 @@
                         {{Form::label('email', 'E-mail')}}
                         {{Form::text('email',$data->email,['class' => 'form-control', 'placeholder' => 'E-mail','readonly'=>'readonly'])}}
                     </div>
+                    @if(isset($params['is_admin']))
+                    {{ Form::open(['route' => ['admin.professor.updatepassword',$data->id],'method' =>'put']) }}
+                    @else
                     {{ Form::open(['route' => [$params['main_route'].'.updatepassword',$data->id],'method' =>'put']) }}
-
+                    @endif
                     <div class="form-group">
                         {{Form::label('password', 'Nova Senha')}}
                         {{Form::password('password',['class' => 'form-control', 'placeholder' => 'Senha'])}}

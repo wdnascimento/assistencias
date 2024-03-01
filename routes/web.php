@@ -195,6 +195,10 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::put('professor/update/{id}', [ProfessorController::class,'update'])->name('admin.professor.update');
     Route::delete('professor/destroy/{id}', [ProfessorController::class,'destroy'])->name('admin.professor.destroy');
 
+     // Professor password
+    Route::get('professor/trocarsenha/{id}', [ProfessorProfessorController::class,'showPasswordAdmin'])->name('admin.professor.trocarsenha');
+    Route::put('professor/updatepassword/{id}', [ProfessorProfessorController::class,'updatePasswordAdmin'])->name('admin.professor.updatepassword');
+
 
     //Turma
     Route::get('turma', [TurmaController::class,'index'])->name('admin.turma.index');
@@ -217,10 +221,10 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::post('unidade/desativar/{id}', [UnidadeController::class,'desativar'])->name('admin.unidade.desativar');
 });
 
-Route::get('test', function () {
-    event(new App\Events\PainelSalaEvent(1));
-    return "Event has been sent!";
-});
+// Route::get('test', function () {
+//     event(new App\Events\PainelSalaEvent(1));
+//     return "Event has been sent!";
+// });
 
 // Auth::routes();
 

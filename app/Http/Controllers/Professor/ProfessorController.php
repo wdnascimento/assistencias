@@ -35,6 +35,16 @@ class ProfessorController extends Controller
         return view('professor.professor.trocarsenha',compact('params','data'));
     }
 
+    public function showPasswordAdmin($id)
+    {
+        $this->params['subtitulo']='Trocar Senha do Usuário';
+        $params = $this->params;
+        $params['is_admin'] = 1;
+
+        $data = $this->professor->find($id);
+        return view('professor.professor.trocarsenha',compact('params','data'));
+    }
+
     public function updatePassword(UpdatePasswordRequest $request)
     {
         $data = $this->professor->find(Auth::User()->id);
@@ -47,6 +57,21 @@ class ProfessorController extends Controller
             return redirect()->route('professor.home');
         }else{
             return redirect()->route($this->params['main_route'].'.trocarsenha')->withErrors(['Falha ao trocar a senha.']);
+        }
+    }
+
+    public function updatePasswordAdmin(UpdatePasswordRequest $request,$id)
+    {
+        $data = $this->professor->find($id);
+
+        $password = $request->only('password');
+
+        $dataForm['password']  = Hash::make($password['password']);
+
+        if($data->update($dataForm)){
+            return redirect()->route('admin.professor.index');
+        }else{
+            return redirect()->route('admin.professor.trocarsenha')->withErrors(['Falha ao trocar a senha.']);
         }
     }
 }
