@@ -221,11 +221,4 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin','namespace' => 'A
     Route::post('unidade/desativar/{id}', [UnidadeController::class,'desativar'])->name('admin.unidade.desativar');
 });
 
-// Route::get('test', function () {
-//     event(new App\Events\PainelSalaEvent(1));
-//     return "Event has been sent!";
-// });
-
-// Auth::routes();
-
 Route::get('/home', [ControllersHomeController::class, 'index'])->name('home');
