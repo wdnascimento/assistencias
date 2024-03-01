@@ -4,26 +4,26 @@
             <div v-for="(items,index) in this.$store.getters.getAtendimentos.slice(0,1)" :key="items.id" class="col-12 pt-3 "   >
                 <div class="d-flex py-2 rounded shadow piscando" >
                     <div class="col-1 d-flex justify-content-center align-content-center" >
-                        <h3 class="d-flex">
+                        <h3 class="d-flex" style="align-self: center;">
                             {{ (index + 1) }}
                         </h3>
                     </div>
-                    <div class="col-4" >
-                        <h4 class="rounded m-0 p-0 bg-white text-center">Senha:
-                            <h2 class="p-0 m-0 font-weight-bold">{{ items.senha }}</h2>
+                    <div class="col-4">
+                        <h4 class="rounded m-0 p-0 bg-white text-center custom-text" style="font-size: 50px; line-height: 0.8; overflow: visible;">Senha:
+                            <h2 class="p-0 m-0 font-weight-bold" style="font-size: 80px;">{{ items.senha }}</h2>
                             {{ items.sala }}
                         </h4>
                     </div>
                     <div class="col-7" >
-                        <h2>
+                        <h2 style="font-size: 50px;">
                             Aluno:
                             <span v-if="(items.cabine )">Cabine {{ items.cabine }} - </span>
                             <!-- <span v-else>{{ items.numero }}</span> -->
                              {{ items.aluno }}
                         </h2>
-                        <h4>
+                        <h2 style="font-size: 50px;">
                             Prof. {{ items.professor }} - {{ items.disciplina }}
-                        </h4>
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -31,25 +31,30 @@
 
         <h2 class="w-100 py-2" >Histórico</h2>
 
-        <div class="row">
-            <div v-for="(items,index) in this.$store.getters.getAtendimentos.slice(1,10)" :key="items.id" class="col-12 pt-2" >
-                <div  class="d-flex py-2 bg-#3CB371-light rounded">
-                    <div class="col-1 d-flex justify-content-center align-content-center" >
-                        <h5 class="d-flex">
-                            {{ (index + 2) }}
-                        </h5>
-                    </div>
-                    <div class="col-4" >
-                        <h4 class="text-center">
-                            Senha: <span class="p-0 px-2 m-0 font-weight-bold">{{ items.senha }}</span> - {{ items.sala }}
-                        </h4>
-                    </div>
-                    <div class="col-7" >
-                        <h4>
-                            Aluno: <span v-if="(items.cabine )">{{ items.cabine }}</span><span v-else>{{ items.numero }}</span> - {{ items.aluno }} / Prof. {{ items.professor }} - {{ items.disciplina }}
-                        </h4>
-                    </div>
-                </div>
+        <div class="row w-100">
+            <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Posição</th>
+                        <th scope="col">Senha / Mesa</th>
+                        <th scope="col">Aluno / Professor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(items,index) in this.$store.getters.getAtendimentos.slice(1,10)" :key="items.id" style="font-size: 30px;" >
+                            <td class="text-center" >
+                                {{ (index + 2) }}
+                            </td>
+                            <td >
+                                Senha:<span class="px-2 font-weight-bold">{{ items.senha }}</span> / {{ items.sala }}
+                            </td>
+                            <td>
+                                    Aluno: <span v-if="(items.cabine )">{{ items.cabine }}</span><span v-else>{{ items.numero }}</span> - {{ items.aluno }} / Prof. {{ items.professor }} - {{ items.disciplina }}
+                            </td>
+                    </tr>
+                </tbody>
+            </table>
             </div>
         </div>
 
@@ -146,4 +151,5 @@ export default {
         -o-animation: glowing 1500ms infinite;
         animation: glowing 1500ms infinite;
     }
+
 </style>
