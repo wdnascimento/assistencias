@@ -324,7 +324,7 @@ class Atendimento extends Model
                     ->join('salas','salas.id', 'aulas.sala_id')
                     ->where('salas.turma_id',$sala_id)
                     ->whereIn('atendimentos.status',[1,2])
-                    // ->whereRaw('DATE(atendimentos.hora_atendimento) = DATE(NOW())')
+                    ->whereRaw('DATE(atendimentos.hora_atendimento) = DATE(NOW())')
                     ->orderBy('hora_atendimento','desc')
                     ->limit(10)
                     ->get();
